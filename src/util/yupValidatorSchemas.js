@@ -12,3 +12,7 @@ export const registerSchema = yup.object().shape({
     firstName:yup.string().required('First Name is required')
 });
 
+export const destinationSchema = yup.object().shape({
+    name:yup.string().required('Destination Name is required')
+});
+

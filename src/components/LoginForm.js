@@ -43,7 +43,8 @@ const LoginForm = () => {
         }
         ,
         onError({graphQLErrors}) {
-            setServerErrors(graphQLErrors[0].extensions.errors);
+            console.log(graphQLErrors, 'loginUser err');
+            setServerErrors(graphQLErrors[0]?.extensions?.errors);
         },
        // variables: {email: getValues().email, password: getValues().password}
     });
@@ -119,8 +120,8 @@ const LoginForm = () => {
             >
                 Login
             </Button>
-            {serverErrors && serverErrors?.map((err, index) => <Alert key={index}
-                                                                      severity={'error'}>{err.extensions.code}</Alert>)}
+            {/*{serverErrors && serverErrors?.map((err, index) => <Alert key={index}*/}
+            {/*                                                          severity={'error'}>{err.extensions.code}</Alert>)}*/}
         </Box>
     );
 };

@@ -29,5 +29,17 @@ export const REGISTER_USER = gql`
     }
 `;
 
+export const DESTINATION_CREATE = gql`
+    mutation destinationCreate($destinationName: String!) {
+        destinationCreate (
+            values:{destinationName: $destinationName }
+        ){
+            _id
+            destinationName
+            owner
+        }
+    }
+`;
+
 
 

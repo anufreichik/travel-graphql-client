@@ -5,6 +5,7 @@ export const destinationTypes = gql`
     extend type Query{
         destinations(offset: Int, limit: Int):PagedDestination
         destination(destinationId:ID):Destination
+        userdestinations(owner:ID):[Destination]
     }
     type Destination{
         _id:ID

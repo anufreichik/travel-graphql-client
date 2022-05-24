@@ -18,3 +18,20 @@ export const GET_DESTINATIONS = gql`
     }
 `;
 
+export const GET_DESTINATIONSBYUSER = gql`
+    query UserDestinations($owner:ID!){
+        userdestinations(owner:$owner){
+                destinationName
+                destinationFood {
+                    foodPlaceName
+                    foodType
+                }
+                destinationActivity {
+                    activityName
+                }
+            
+        }
+    }
+`;
+
+

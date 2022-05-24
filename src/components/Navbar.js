@@ -6,9 +6,11 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function Navbar() {
     const { user, logout } = useContext(AuthContext);
-const routerLinkStyle = {textDecoration:"none", color:"grey", fontSize:"14px"};
+    const routerLinkStyle = {textDecoration:"none", color:"grey", fontSize:"14px"};
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -51,6 +53,8 @@ const routerLinkStyle = {textDecoration:"none", color:"grey", fontSize:"14px"};
                                    >
                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
                                        <MenuItem onClick={handleClose}><Link to="/useraccount" style={routerLinkStyle}>My Account</Link>
+                                       </MenuItem>
+                                       <MenuItem onClick={handleClose}><Link to="/mydestinations" style={routerLinkStyle}>Manage My Expiriences</Link>
                                        </MenuItem>
                                        <MenuItem onClick={handleClose}> <Link to="/"  onClick={logout} style={routerLinkStyle}>Logout</Link></MenuItem>
                                    </Menu>
