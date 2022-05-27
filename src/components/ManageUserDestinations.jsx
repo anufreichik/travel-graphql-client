@@ -14,7 +14,8 @@ const ManageUserDestinations = () => {
         data,
         loading
     } = useQuery(GET_DESTINATIONSBYUSER, {
-        //fetchPolicy: 'cache-first',
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'network-only',
         variables: {
             owner: user._id,
         },

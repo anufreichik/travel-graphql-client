@@ -38,13 +38,13 @@ const DestinationCard = ({destination}) => {
                                 {destination.destinationName}
                             </Typography>
                             {
-                                destination.destinationFood &&
+                                destination.destinationFood.length>0 &&
                                 <>
                                     <Typography variant="caption" gutterBottom marginRight={1}>
-                                        {destination.destinationFood[0].foodPlaceName}
+                                        {destination?.destinationFood[0]?.foodPlaceName || '' }
                                     </Typography>
                                     <Typography variant="caption" color="text.secondary">
-                                        ({destination.destinationFood[0].foodType})
+                                        ({destination?.destinationFood[0]?.foodType|| '' })
                                     </Typography>
                                 </>
                             }

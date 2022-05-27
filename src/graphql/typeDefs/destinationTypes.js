@@ -10,8 +10,11 @@ export const destinationTypes = gql`
     type Destination{
         _id:ID
         destinationName:String
+        destinationDescription:String
         destinationFood:[FoodPlace]
         destinationActivity:[Activity]
+        destinationAccommodation:[Accommodation]
+        images:[String]
         owner:ID
     }
     type PagedDestination{
@@ -30,8 +33,7 @@ export const destinationTypes = gql`
 
     input DestinationInput {
         destinationName:String
-        destinationFood:[ID]
-        destinationActivity:[ID]
+        destinationDescription:String
     }
 `
 

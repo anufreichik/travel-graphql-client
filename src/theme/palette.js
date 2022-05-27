@@ -30,8 +30,8 @@ const GREY = {
 
 const PRIMARY = {
   lighter: '#C8FACD',
-  light: '#5BE584',
-  main: '#00AB55',
+  light: '#cad0c7',
+  main: '#7e9a77',
   dark: '#007B55',
   darker: '#005249',
   contrastText: '#fff'
@@ -54,8 +54,8 @@ const INFO = {
 };
 const SUCCESS = {
   lighter: '#E9FCD4',
-  light: '#AAF27F',
-  main: '#54D62C',
+  light: '#cad0c7',
+  main: '#7e9a77',
   dark: '#229A16',
   darker: '#08660D',
   contrastText: GREY[800]

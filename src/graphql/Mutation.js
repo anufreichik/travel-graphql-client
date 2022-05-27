@@ -30,16 +30,30 @@ export const REGISTER_USER = gql`
 `;
 
 export const DESTINATION_CREATE = gql`
-    mutation destinationCreate($destinationName: String!) {
+    mutation destinationCreate($destination: DestinationInput) {
         destinationCreate (
-            values:{destinationName: $destinationName }
+            values:$destination
         ){
             _id
             destinationName
+            destinationDescription
             owner
         }
     }
 `;
 
-
+export const ACTIVITY_CREATE = gql`
+    mutation activityCreate($activity: ActivityInput) {
+        activityCreate (
+            values: $activity 
+        ){
+            _id
+            activityName
+            activityType
+            address
+            notes
+            link
+        }
+    }
+`;
 

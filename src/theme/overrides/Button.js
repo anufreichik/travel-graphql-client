@@ -8,6 +8,7 @@ export default function Button(theme) {
       },
       styleOverrides: {
         root: {
+          borderRadius: 0,
           '&:hover': {
             boxShadow: 'none'
           }
