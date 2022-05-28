@@ -26,7 +26,7 @@ const ManageUserDestinations = () => {
     return (
         <div>
             <h3>User Destinations</h3>
-            <Button variant='contained'  startIcon={<AddIcon/>} sx={{marginBottom:2}} onClick={handleRedirectCreateDestination}>Expirience</Button>
+            <Button   startIcon={<AddIcon/>} sx={{marginBottom:2}} onClick={handleRedirectCreateDestination}>Expirience</Button>
             {data ? (
                 <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
                     {data?.userdestinations?.map((dest, ind) => (

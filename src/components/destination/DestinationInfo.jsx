@@ -1,21 +1,50 @@
-import React from 'react';
-import Box from '@mui/material/Box';
+import React, {useContext, useEffect} from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-const DestinationInfo = ({destination}) => {
+
+import {useQuery} from "@apollo/client";
+import {GET_DESTINATION_BYID} from "../../graphql/Query";
+
+const DestinationInfo = ({destinationId, refresh}) => {
+
+    const {
+        data,
+        refetch,
+        loading
+    } = useQuery(GET_DESTINATION_BYID, {
+        fetchPolicy: 'no-cache',
+        // nextFetchPolicy: 'network-only',
+        variables: {
+            destinationId: destinationId,
+        },
+    });
+    useEffect(()=>{
+           refetch();
+    },[refresh]);
+
+   if(loading) return <div>Loading...</div>
+
+
+
     return (
         <Card sx={{ minWidth: 500 }}>
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    {destination.destinationName}
+                <Typography  variant="h5" component="div" color="text.secondary" gutterBottom>
+                    {data?.destination.destinationName}
                 </Typography>
-                <Typography variant="h5" component="div">
-                    {destination.destinationDescription}
+                <Typography sx={{ fontSize: 14 }}>
+                    {data?.destination.destinationDescription?.slice(0,200)}{data?.destination.destinationDescription?.length>200?'...':''}
                 </Typography>
+                {
+                    data?.destination.destinationActivity.length>0 &&
+                    data?.destination.destinationActivity.map(el=>
+                        (<div key={el._id}>{el.activityName}</div>)
+                    )
+                }
                 {/*<Typography sx={{ mb: 1.5 }} color="text.secondary">*/}
                 {/*    adjective*/}
                 {/*</Typography>*/}
@@ -26,7 +55,7 @@ const DestinationInfo = ({destination}) => {
                 {/*</Typography>*/}
             </CardContent>
             <CardActions>
-                <Button size="small">Show More...</Button>
+                <Button size="small">Back To My Experiences</Button>
             </CardActions>
         </Card>
     );

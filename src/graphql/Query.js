@@ -34,4 +34,38 @@ export const GET_DESTINATIONSBYUSER = gql`
     }
 `;
 
+export const GET_DESTINATION_BYID = gql`
+    query GetDestinationById($destinationId:ID!){
+        destination(destinationId:$destinationId){
+            destinationName
+            destinationDescription
+            destinationFood {
+                _id
+                foodPlaceName
+                foodType
+                address
+                notes
+                link
+            }
+            destinationActivity {
+                _id
+                activityName
+                activityType
+                address
+                notes
+                link
+            }
+            destinationAccommodation {
+                _id
+                accommodationName
+                accommodationType
+                address
+                link
+                notes
+            }
+
+        }
+    }
+`;
+
 
