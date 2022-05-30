@@ -11,6 +11,7 @@ export const GET_DESTINATIONS = gql`
                 }
                 destinationActivity {
                     activityName
+                    activityType
                 }
             }
             totalCount

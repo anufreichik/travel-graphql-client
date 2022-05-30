@@ -57,3 +57,18 @@ export const ACTIVITY_CREATE = gql`
     }
 `;
 
+export const FOOD_PLACE_CREATE = gql`
+    mutation foodPlaceCreate($foodExperience: FoodPlaceInput) {
+        foodPlaceCreate (
+            values: $foodExperience
+        ){
+            _id
+            foodPlaceName
+            foodType
+            address
+            notes
+            link
+        }
+    }
+`;
+

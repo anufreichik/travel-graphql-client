@@ -54,7 +54,7 @@ function Navbar() {
                                        <MenuItem onClick={handleClose}>Profile</MenuItem>
                                        <MenuItem onClick={handleClose}><Link to="/useraccount" style={routerLinkStyle}>My Account</Link>
                                        </MenuItem>
-                                       <MenuItem onClick={handleClose}><Link to="/mydestinations" style={routerLinkStyle}>Manage My Expiriences</Link>
+                                       <MenuItem onClick={handleClose}><Link to="/mydestinations" style={routerLinkStyle}>My Experiences</Link>
                                        </MenuItem>
                                        <MenuItem onClick={handleClose}> <Link to="/"  onClick={logout} style={routerLinkStyle}>Logout</Link></MenuItem>
                                    </Menu>

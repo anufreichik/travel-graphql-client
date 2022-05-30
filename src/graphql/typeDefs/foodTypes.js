@@ -21,7 +21,7 @@ export const foodTypes=gql `
     }
 
     input FoodPlaceInput{
-        foodPlaceName: String
+        foodPlaceName: String!
         foodType:String
         address:String
         notes:String

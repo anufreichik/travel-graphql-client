@@ -9,9 +9,10 @@ const LoginLayout = ({children}) => {
             <CssBaseline />
             <Container maxWidth="xl">
                 <Navbar/>
-                <Box sx={{ backgroundColor: '#f5f5f4', height: '100vh', padding:'20px' }} >
+                <Box sx={{ backgroundColor: '#f5f5f4', height: '100%', padding:'20px' }} >
                     <Outlet/>
                 </Box>
+                {/*<Footer/>*/}
             </Container>
         </React.Fragment>
     );

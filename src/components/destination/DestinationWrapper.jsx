@@ -1,17 +1,20 @@
 import React, {useState} from 'react';
 import AddDestinationForm from "./AddDestinationForm";
 import {useMutation} from "@apollo/client";
-import {DESTINATION_CREATE, ACTIVITY_CREATE} from "../../graphql/Mutation";
+import {DESTINATION_CREATE, ACTIVITY_CREATE, FOOD_PLACE_CREATE} from "../../graphql/Mutation";
 import AddActivityForm from "./AddActivityForm";
 import DestinationInfo from "./DestinationInfo";
 import FormDialog from "../FormDialog";
 import Button from "@mui/material/Button";
-import {Divider, Grid, Stack} from "@mui/material";
+import {Divider, Stack} from "@mui/material";
+import FoodExperienceForm from "./FoodExperienceForm";
 
 
-const NewDestinationFormWrapper = () => {
+const DestinationWrapper = () => {
     const [destinationCreate, {loading, error}] = useMutation(DESTINATION_CREATE);
     const [activityCreate, {loading: activityLoading, error: activityError}] = useMutation(ACTIVITY_CREATE);
+    const [foodPlaceCreate, {loading: foodPlaceLoading, error: foodPlaceError}] = useMutation(FOOD_PLACE_CREATE);
+
     const [destination, setDestination] = useState();
 
 
@@ -53,7 +56,6 @@ const NewDestinationFormWrapper = () => {
 
         })
             .then((res) => {
-                console.log(res, 'result destination')
                 setDestination(res.data.destinationCreate);
             });
     }
@@ -65,6 +67,8 @@ const NewDestinationFormWrapper = () => {
                     activity: {
                         activityName: formValues.activityName,
                         activityType: formValues.activityType,
+                        address: formValues.activityAddress,
+                        notes: formValues.activityNotes,
                         destination: destination?._id
                     }
 
@@ -75,6 +79,27 @@ const NewDestinationFormWrapper = () => {
                 setRefresh(res?.data?.activityCreate?._id);
             });
     }
+    const createNewFoodPlace = (formValues) => {
+        console.log(formValues)
+        foodPlaceCreate({
+            variables:
+                {
+                    foodExperience: {
+                        foodPlaceName: formValues.foodPlaceName,
+                        foodType: formValues.foodPlaceType,
+                        address: formValues.foodPlaceAddress,
+                        notes: formValues.foodPlaceNotes,
+                        destination: destination?._id
+                    }
+
+                },
+
+        })
+            .then((res) => {
+                setRefresh(res?.data?.foodPlaceCreate?._id);
+            });
+    }
+
 
     return (
         <div>
@@ -83,8 +108,9 @@ const NewDestinationFormWrapper = () => {
 
             {destination?._id && (
                 <>
-                    <DestinationInfo destinationId={destination?._id}  refresh={refresh}/>
+
                     <Stack
+                        sx={{marginBottom:2}}
                         direction={{xs: 'column', sm: 'row'}}
                         spacing={{xs: 1, sm: 2, md: 4}}
                         divider={<Divider orientation="vertical" flexItem/>}
@@ -100,13 +126,16 @@ const NewDestinationFormWrapper = () => {
                         </Button>
                     </Stack>
 
+                    <DestinationInfo destinationId={destination?._id} refresh={refresh}/>
+
                     <FormDialog title='Add Activity' open={openActivity}>
                         <AddActivityForm createNewActivity={createNewActivity}
                                          toggleDialog={toggleDialog}
-                                        />
+                        />
                     </FormDialog>
                     <FormDialog title='Add Food Experience' open={openFoodExperience}>
-                        <div> food form</div>
+                        <FoodExperienceForm createNewFoodPlace={createNewFoodPlace}
+                                            toggleDialog={toggleDialog}/>
                     </FormDialog>
                     <FormDialog title='Add Accommodation' open={openAccommodation}>
                         <div> accommodaton form</div>
@@ -118,4 +147,4 @@ const NewDestinationFormWrapper = () => {
     );
 };
 
-export default NewDestinationFormWrapper;
+export default DestinationWrapper;
