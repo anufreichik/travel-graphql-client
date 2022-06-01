@@ -1,9 +1,10 @@
-import { gql } from "@apollo/client";
+import {gql} from "@apollo/client";
 
 export const GET_DESTINATIONS = gql`
     query Destinations($offset:Int, $limit:Int){
         destinations(offset:$offset, limit: $limit){
             list {
+                _id
                 destinationName
                 destinationFood {
                     foodPlaceName
@@ -22,15 +23,16 @@ export const GET_DESTINATIONS = gql`
 export const GET_DESTINATIONSBYUSER = gql`
     query UserDestinations($owner:ID!){
         userdestinations(owner:$owner){
-                destinationName
-                destinationFood {
-                    foodPlaceName
-                    foodType
-                }
-                destinationActivity {
-                    activityName
-                }
-            
+            _id
+            destinationName
+            destinationFood {
+                foodPlaceName
+                foodType
+            }
+            destinationActivity {
+                activityName
+            }
+
         }
     }
 `;

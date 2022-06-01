@@ -1,17 +1,8 @@
 import React from 'react';
-import {Box, CircularProgress, Grid, Paper} from "@mui/material";
-import {experimentalStyled as styled} from '@mui/material/styles';
+import {Box, CircularProgress, Grid} from "@mui/material";
 import {useQuery} from "@apollo/client";
 import {GET_DESTINATIONS} from "../graphql/Query";
 import DestinationCard from "../components/DestinationCard";
-
-// const Item = styled(Paper)(({theme}) => ({
-//     backgroundColor:  '#1A2027',
-//     ...theme.typography.body2,
-//     padding: theme.spacing(2),
-//     textAlign: 'center',
-//     color: theme.palette.text.secondary,
-// }));
 
 function Home() {
     const {
@@ -25,7 +16,7 @@ function Home() {
             limit: 9,
         },
     });
-    console.log(data)
+
     return (
         <Box sx={{flexGrow: 1}}>
 

@@ -21,7 +21,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {Menu, MenuItem} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const Img = styled('img')({
     margin: 'auto',
@@ -44,6 +44,7 @@ const ExpandMore = styled((props) => {
 const DestinationCard = ({destination, showControls}) => {
     const [expanded, setExpanded] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const navigate = useNavigate();
     const open = Boolean(anchorEl);
 
 
@@ -56,6 +57,10 @@ const DestinationCard = ({destination, showControls}) => {
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    const handleEditClick = ()=>{
+        navigate(`/destination/${destination._id}`);
+    }
 
     return (
         <Card sx={{
@@ -83,7 +88,7 @@ const DestinationCard = ({destination, showControls}) => {
                                 }}
                                 sx={{ marginRight: 3 }}
                             >
-                                <MenuItem>Edit</MenuItem>
+                                <MenuItem onClick={handleEditClick}>Edit</MenuItem>
                                 <MenuItem>Delete</MenuItem>
                             </Menu>
                         </>

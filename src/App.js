@@ -10,8 +10,8 @@ import AuthRoute from "./components/AuthRoute";
 import UserAccount from "./pages/useraccount";
 import ThemeConfig from "./theme";
 import ManageUserDestinations from "./components/ManageUserDestinations";
-import AddDestinationForm from "./components/destination/AddDestinationForm";
 import DestinationWrapper from "./components/destination/DestinationWrapper";
+import NotFound from "./components/NotFound";
 
 const App=()=> {
     return (
@@ -23,7 +23,8 @@ const App=()=> {
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/useraccount" element={<AuthRoute ><UserAccount/></AuthRoute>}/>
                     <Route path="/mydestinations" element={<AuthRoute ><ManageUserDestinations/></AuthRoute>}/>
-                    <Route path="/newdestination" element={<AuthRoute ><DestinationWrapper/></AuthRoute>}/>
+                    <Route path="/destination/:destinationId" element={<AuthRoute ><DestinationWrapper/></AuthRoute>}/>
+                    <Route path="*" element={<NotFound />} />
                 </Route>
 
             </Routes>

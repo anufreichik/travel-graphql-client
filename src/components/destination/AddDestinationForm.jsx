@@ -3,9 +3,8 @@ import {Box, Button, Grid, TextField} from "@mui/material";
 import {useForm, Controller} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {destinationSchema} from "../../util/yupValidatorSchemas";
-import {useNavigate} from "react-router-dom";
 
-const AddDestinationForm = ({createNewDestination}) => {
+const AddDestinationForm = ({createNewDestination, toggleDialog}) => {
     const {
         register,
         handleSubmit,
@@ -20,13 +19,13 @@ const AddDestinationForm = ({createNewDestination}) => {
     const onSubmit = (formValues, e) => {
         createNewDestination(formValues);
         e.target.reset();
+        toggleDialog();
     }
-
-    const navigate = useNavigate();
 
     const handleCancel = () => {
-        navigate('/');
+        toggleDialog();
     }
+
     return (
 
         <Box>
@@ -42,7 +41,7 @@ const AddDestinationForm = ({createNewDestination}) => {
                         error={Boolean(errors.name)}
                         helperText={errors.name?.message}
                         size="small"
-                        sx={{width: '400px'}}
+                        sx={{width: '500px'}}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -58,7 +57,7 @@ const AddDestinationForm = ({createNewDestination}) => {
                         error={Boolean(errors.name)}
                         helperText={errors.name?.message}
                         size="small"
-                        sx={{width:'800px'}}
+                        sx={{width:'500px'}}
                     />
                 </Grid>
                 <Grid item xs={12} sx={{pb: 2}}>
