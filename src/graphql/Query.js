@@ -31,6 +31,7 @@ export const GET_DESTINATIONSBYUSER = gql`
             }
             destinationActivity {
                 activityName
+                activityType
             }
 
         }

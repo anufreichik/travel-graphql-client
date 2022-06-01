@@ -45,7 +45,7 @@ export const DESTINATION_CREATE = gql`
 export const ACTIVITY_CREATE = gql`
     mutation activityCreate($activity: ActivityInput) {
         activityCreate (
-            values: $activity 
+            values: $activity
         ){
             _id
             activityName
@@ -71,4 +71,21 @@ export const FOOD_PLACE_CREATE = gql`
         }
     }
 `;
+
+export const DESTINATION_DELETE = gql`
+    mutation destinationDelete($destinationId:ID!) {
+        destinationDelete (
+            destinationId: $destinationId
+        )
+    }
+`;
+
+export const FOOD_PLACE_DELETE = gql`
+    mutation foodPlaceDelete($foodPlaceId:ID!) {
+        foodPlaceDelete (
+            foodPlaceId: $foodPlaceId
+        )
+    }
+`;
+
 

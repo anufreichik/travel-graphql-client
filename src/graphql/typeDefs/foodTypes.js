@@ -17,7 +17,7 @@ export const foodTypes=gql `
     extend type Mutation {
         foodPlaceCreate(values:FoodPlaceInput):FoodPlace
         foodPlaceUpdate(foodPlaceId:ID, values:FoodPlaceInput):FoodPlace
-        foodPlaceDelete(foodPlaceId:ID):String
+        foodPlaceDelete(foodPlaceId:ID!):String
     }
 
     input FoodPlaceInput{

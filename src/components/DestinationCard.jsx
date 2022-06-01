@@ -5,23 +5,25 @@ import {styled} from '@mui/material/styles';
 // import Typography from '@mui/material/Typography';
 // import {ButtonBase} from "@mui/material";
 import pic from '../static/Images/complex.png'
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton, {IconButtonProps} from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import {red} from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {Menu, MenuItem} from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
+import {Button, Menu, MenuItem} from "@mui/material";
+import {useNavigate} from "react-router-dom";
 
 const Img = styled('img')({
     margin: 'auto',
@@ -41,12 +43,22 @@ const ExpandMore = styled((props) => {
         duration: theme.transitions.duration.shortest,
     }),
 }));
-const DestinationCard = ({destination, showControls}) => {
+const DestinationCard = ({destination, showControls, handleDeleteDestination}) => {
     const [expanded, setExpanded] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const navigate = useNavigate();
     const open = Boolean(anchorEl);
 
+
+    const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
+
+    const handleClickOpenDeleteDialog = () => {
+        setOpenConfirmDelete(true);
+    };
+
+    const handleCloseConfirmDelete = () => {
+        setOpenConfirmDelete(false);
+    };
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -59,7 +71,14 @@ const DestinationCard = ({destination, showControls}) => {
     };
 
     const handleEditClick = ()=>{
+        setAnchorEl(null);
         navigate(`/destination/${destination._id}`);
+    }
+
+    const deleteDestinationOK=()=>{
+        if(handleDeleteDestination) handleDeleteDestination(destination._id);
+        setAnchorEl(null);
+        setOpenConfirmDelete(false);
     }
 
     return (
@@ -89,7 +108,28 @@ const DestinationCard = ({destination, showControls}) => {
                                 sx={{ marginRight: 3 }}
                             >
                                 <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                                <MenuItem>Delete</MenuItem>
+                                <MenuItem onClick={handleClickOpenDeleteDialog}>Delete</MenuItem>
+                                <Dialog
+                                    open={openConfirmDelete}
+                                    onClose={handleCloseConfirmDelete}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                >
+                                    <DialogTitle id="alert-dialog-title">
+                                        {"Delete Destination?"}
+                                    </DialogTitle>
+                                    <DialogContent>
+                                        <DialogContentText id="alert-dialog-description">
+                                           Are you sure you want to delete this destination and all related items(activities, food places, accommodations)?
+                                        </DialogContentText>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={handleCloseConfirmDelete}>CANCEL</Button>
+                                        <Button onClick={deleteDestinationOK} autoFocus>
+                                            OK
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
                             </Menu>
                         </>
                     ) : undefined
@@ -129,7 +169,7 @@ const DestinationCard = ({destination, showControls}) => {
                     <Typography gutterBottom variant="h5" component="div">Food Experiences</Typography>
                     {
                         destination?.destinationFood?.map(item =>
-                            (<Typography variant="body2" color="text.secondary">
+                            (<Typography variant="body2" color="text.secondary" key={item._id}>
                                 {`${item.foodPlaceName} -(${item.foodType})`}
                             </Typography>)
                         )
@@ -137,7 +177,7 @@ const DestinationCard = ({destination, showControls}) => {
                     <Typography gutterBottom variant="h5" component="div">Activities</Typography>
                     {
                         destination?.destinationActivity?.map(item =>
-                            (<Typography variant="body2" color="text.secondary">
+                            (<Typography variant="body2" color="text.secondary" key={item._id}>
                                 {`${item.activityName} -(${item.activityType})`}
                             </Typography>)
                         )
