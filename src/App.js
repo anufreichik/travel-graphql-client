@@ -9,7 +9,7 @@ import Home from "./pages/home";
 import AuthRoute from "./components/AuthRoute";
 import UserAccount from "./pages/useraccount";
 import ThemeConfig from "./theme";
-import ManageUserDestinations from "./components/ManageUserDestinations";
+import DestinationsList from "./components/destination/DestinationsList";
 import DestinationWrapper from "./components/destination/DestinationWrapper";
 import NotFound from "./components/NotFound";
 
@@ -22,7 +22,7 @@ const App=()=> {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/useraccount" element={<AuthRoute ><UserAccount/></AuthRoute>}/>
-                    <Route path="/mydestinations" element={<AuthRoute ><ManageUserDestinations/></AuthRoute>}/>
+                    <Route path="/mydestinations" element={<AuthRoute ><DestinationsList/></AuthRoute>}/>
                     <Route path="/destination/:destinationId" element={<AuthRoute ><DestinationWrapper/></AuthRoute>}/>
                     <Route path="*" element={<NotFound />} />
                 </Route>

@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/user/LoginForm";
 import { Container, styled} from "@mui/material";
 const ContentStyle = styled('div')(({ theme }) => ({
     maxWidth: 480,

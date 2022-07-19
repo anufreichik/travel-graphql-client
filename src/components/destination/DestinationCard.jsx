@@ -1,10 +1,6 @@
 import * as React from 'react';
 import {styled} from '@mui/material/styles';
-// import Grid from '@mui/material/Grid';
-// import Paper from '@mui/material/Paper';
-// import Typography from '@mui/material/Typography';
-// import {ButtonBase} from "@mui/material";
-import pic from '../static/Images/complex.png'
+import pic from '../../static/Images/complex.png'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -31,6 +27,10 @@ const Img = styled('img')({
     maxWidth: '100%',
     maxHeight: '100%',
     objectFit: "cover"
+});
+
+const StyledCardBody = styled('div')({
+    cursor:'pointer'
 });
 
 const ExpandMore = styled((props) => {
@@ -70,13 +70,13 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
         setExpanded(!expanded);
     };
 
-    const handleEditClick = ()=>{
+    const handleEditClick = () => {
         setAnchorEl(null);
         navigate(`/destination/${destination._id}`);
     }
 
-    const deleteDestinationOK=()=>{
-        if(handleDeleteDestination) handleDeleteDestination(destination._id);
+    const deleteDestinationOK = () => {
+        if (handleDeleteDestination) handleDeleteDestination(destination._id);
         setAnchorEl(null);
         setOpenConfirmDelete(false);
     }
@@ -105,7 +105,7 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
                                 MenuListProps={{
                                     'aria-labelledby': 'basic-button',
                                 }}
-                                sx={{ marginRight: 3 }}
+                                sx={{marginRight: 3}}
                             >
                                 <MenuItem onClick={handleEditClick}>Edit</MenuItem>
                                 <MenuItem onClick={handleClickOpenDeleteDialog}>Delete</MenuItem>
@@ -120,7 +120,8 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
                                     </DialogTitle>
                                     <DialogContent>
                                         <DialogContentText id="alert-dialog-description">
-                                           Are you sure you want to delete this destination and all related items(activities, food places, accommodations)?
+                                            Are you sure you want to delete this destination and all related
+                                            items(activities, food places, accommodations)?
                                         </DialogContentText>
                                     </DialogContent>
                                     <DialogActions>
@@ -137,17 +138,19 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
                 title={destination.destinationName}
                 subheader="September 14, 2016"
             />
-            <CardMedia
-                component="img"
-                height="194"
-                image={pic}
-                alt="Paella dish"
-            />
-            <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                    {destination.destinationDescription}
-                </Typography>
-            </CardContent>
+            <StyledCardBody onClick={handleEditClick}>
+                <CardMedia
+                    component="img"
+                    height="194"
+                    image={pic}
+                    alt="Paella dish"
+                />
+                <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                        {destination.destinationDescription}
+                    </Typography>
+                </CardContent>
+            </StyledCardBody>
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
                     <FavoriteIcon/>

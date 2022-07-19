@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, styled} from "@mui/material";
-import RegisterForm from "../components/RegisterForm";
+import RegisterForm from "../components/user/RegisterForm";
 const ContentStyle = styled('div')(({ theme }) => ({
     maxWidth: 480,
     margin: 'auto',

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -10,18 +10,19 @@ import {useMutation, useQuery} from "@apollo/client";
 import {GET_DESTINATION_BYID} from "../../graphql/Query";
 import {Grid, IconButton, List, ListSubheader, styled} from "@mui/material";
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-import ActivityListItem from "./ActivityListItem";
-import FoodPlaceListItem from "./FoodPlaceListItem";
+import ActivityListItem from "../activity/ActivityListItem";
+import FoodPlaceListItem from "../food/FoodPlaceListItem";
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate} from "react-router-dom";
-import AccommodationListItem from "./AccommodationListItem";
+import AccommodationListItem from "../acommodation/AccommodationListItem";
 import HotelIcon from '@mui/icons-material/Hotel';
 import AddIcon from '@mui/icons-material/Add';
-import FormDialog from "../FormDialog";
-import AddActivityForm from "./AddActivityForm";
-import FoodExperienceForm from "./FoodExperienceForm";
-import {ACTIVITY_CREATE, FOOD_PLACE_CREATE} from "../../graphql/Mutation";
+import FormDialog from "../common/FormDialog";
+import AddActivityForm from "../activity/AddActivityForm";
+import FoodExperienceForm from "../food/FoodExperienceForm";
+import {ACTIVITY_CREATE, FOOD_PLACE_CREATE, ACCOMMODATION_CREATE} from "../../graphql/Mutation";
+import AccommodationForm from "../acommodation/AccommodationForm";
 
 const StyledHeader = styled('div')(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -34,6 +35,11 @@ const StyledHeader = styled('div')(({theme}) => ({
     justifyContent: 'space-between'
 }));
 
+const StyledBackButton = styled(Button)(({theme}) => ({
+   fontSize:'1.2rem',
+    color: theme.palette.info.main,
+    textTransform:'uppercase',
+}));
 
 const DestinationInfo = ({destinationId}) => {
 
@@ -51,7 +57,7 @@ const DestinationInfo = ({destinationId}) => {
 
     const [activityCreate, {loading: activityLoading, error: activityError}] = useMutation(ACTIVITY_CREATE);
     const [foodPlaceCreate, {loading: foodPlaceLoading, error: foodPlaceError}] = useMutation(FOOD_PLACE_CREATE);
-
+    const [accommodationCreate, {loading: accommodationLoading, error: accommodationError}] = useMutation(ACCOMMODATION_CREATE);
 
     const [openActivity, setOpenActivity] = useState(false);
     const [openFoodExperience, setOpenFoodExperience] = useState(false);
@@ -74,6 +80,28 @@ const DestinationInfo = ({destinationId}) => {
         }
 
     };
+
+    const createNewAccommodation=(formValues)=>{
+        console.log(formValues)
+        accommodationCreate({
+            variables:
+                {
+                    accommodation: {
+                        accommodationName: formValues.accommodationName,
+                        accommodationType: formValues.accommodationType,
+                        address: formValues.accommodationAddress,
+                        notes: formValues.accommodationNotes,
+                        destination: destinationId
+                    }
+
+                },
+
+        })
+            .then((res) => {
+                refetch();
+            });
+    }
+
     const createNewActivity = (formValues) => {
         activityCreate({
             variables:
@@ -122,11 +150,10 @@ const DestinationInfo = ({destinationId}) => {
     }
     if (loading) return <div>Loading...</div>
 
-
     return (<>
         <Card sx={{minWidth: 500}}>
             <CardActions>
-                <Button startIcon={<ArrowBackIcon/>} onClick={handleNavigateToMyDestinations}>My Destinations</Button>
+                <StyledBackButton startIcon={<ArrowBackIcon/>} onClick={handleNavigateToMyDestinations}>My Destinations</StyledBackButton>
             </CardActions>
             <CardContent>
                 <Typography variant="h5" component="div" color="text.secondary" gutterBottom>
@@ -172,7 +199,7 @@ const DestinationInfo = ({destinationId}) => {
 
                     <Grid item xs={12} md={4}>
                         <List
-                            sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral', minHeight: '100%'}}
+                            sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral'}}
                             component="nav"
                             aria-labelledby="food-list-subheader"
                             subheader={
@@ -190,8 +217,7 @@ const DestinationInfo = ({destinationId}) => {
                         >
                             {
                                 data?.destination.destinationFood.length > 0 &&
-                                data?.destination.destinationFood.map(el => <FoodPlaceListItem key={el._id}
-                                                                                               foodPlace={el}/>)
+                                data?.destination.destinationFood.map(el => <FoodPlaceListItem key={el._id} foodPlace={el}/>)
                             }
                             {
                                 data?.destination.destinationFood.length === 0 &&
@@ -221,7 +247,7 @@ const DestinationInfo = ({destinationId}) => {
                             {
                                 data?.destination.destinationAccommodation.length > 0 &&
                                 data?.destination.destinationAccommodation.map(el => <AccommodationListItem key={el._id}
-                                                                                                            foodPlace={el}/>)
+                                                                                                            accommodation={el}/>)
                             }
                             {
                                 data?.destination.destinationAccommodation.length === 0 &&
@@ -235,17 +261,17 @@ const DestinationInfo = ({destinationId}) => {
             </CardContent>
 
         </Card>
-            <FormDialog title='Add Activity' open={openActivity}>
+            <FormDialog title='Add Activity' open={openActivity} onClose={()=>setOpenActivity(false)}>
                 <AddActivityForm createNewActivity={createNewActivity}
                                  toggleDialog={toggleDialog}
                 />
             </FormDialog>
-            <FormDialog title='Add Food Place' open={openFoodExperience}>
+            <FormDialog title='Add Food Place' open={openFoodExperience} onClose={()=>setOpenFoodExperience(false)}>
                 <FoodExperienceForm createNewFoodPlace={createNewFoodPlace}
                                     toggleDialog={toggleDialog}/>
             </FormDialog>
-            <FormDialog title='Add Accommodation' open={openAccommodation}>
-                <div> accommodaton form</div>
+            <FormDialog title='Add Accommodation' open={openAccommodation} onClose={()=>setOpenAccommodation(false)}>
+               <AccommodationForm createNewAccommodation={createNewAccommodation} toggleDialog={toggleDialog}/>
             </FormDialog>
         </>
     );

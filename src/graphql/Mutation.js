@@ -72,6 +72,22 @@ export const FOOD_PLACE_CREATE = gql`
     }
 `;
 
+export const ACCOMMODATION_CREATE = gql`
+    mutation accommodationCreate($accommodation: AccommodationInput) {
+        accommodationCreate (
+            values: $accommodation
+        ){
+            _id
+            accommodationName
+            accommodationType
+            address
+            notes
+            link
+        }
+    }
+`;
+
+
 export const DESTINATION_DELETE = gql`
     mutation destinationDelete($destinationId:ID!) {
         destinationDelete (

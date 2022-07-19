@@ -1,13 +1,13 @@
 import React, {useState, useContext} from 'react';
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Controller, useForm} from "react-hook-form";
-import {loginSchema} from "../util/yupValidatorSchemas";
+import {loginSchema} from "../../util/yupValidatorSchemas";
 import {Box, Button, CircularProgress, Icon, IconButton, InputAdornment, Stack, TextField} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {Alert, LoadingButton} from '@mui/lab';
-import {AuthContext} from "../context/authContext";
+import {AuthContext} from "../../context/authContext";
 import {useMutation} from "@apollo/client";
-import {LOGIN_USER} from "../graphql/Mutation";
+import {LOGIN_USER} from "../../graphql/Mutation";
 import {useNavigate} from "react-router-dom";
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, CircularProgress, Grid} from "@mui/material";
 import {useQuery} from "@apollo/client";
 import {GET_DESTINATIONS} from "../graphql/Query";
-import DestinationCard from "../components/DestinationCard";
+import DestinationCard from "../components/destination/DestinationCard";
 
 function Home() {
     const {

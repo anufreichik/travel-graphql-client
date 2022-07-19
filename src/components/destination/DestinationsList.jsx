@@ -1,16 +1,23 @@
 import React, {useContext, useState} from 'react';
-import {Button, CircularProgress, Grid} from "@mui/material";
-import {AuthContext} from "../context/authContext";
+import {Button, CircularProgress, Grid, styled} from "@mui/material";
+import {AuthContext} from "../../context/authContext";
 import {useMutation, useQuery} from "@apollo/client";
-import {GET_DESTINATIONSBYUSER} from "../graphql/Query";
+import {GET_DESTINATIONSBYUSER} from "../../graphql/Query";
 import DestinationCard from "./DestinationCard";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate} from "react-router-dom";
-import FormDialog from "./FormDialog";
-import AddDestinationForm from "./destination/AddDestinationForm";
-import {DESTINATION_CREATE, DESTINATION_DELETE} from "../graphql/Mutation";
+import FormDialog from "../common/FormDialog";
+import AddDestinationForm from "./AddDestinationForm";
+import {DESTINATION_CREATE, DESTINATION_DELETE} from "../../graphql/Mutation";
 
-const ManageUserDestinations = () => {
+
+const StyledAddButton = styled(Button)(({theme}) => ({
+    fontSize:'1.2rem',
+    color: theme.palette.info.main,
+    textTransform:'uppercase',
+}));
+
+const DestinationsList = () => {
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
     const [destinationCreate, {loading: destinationLoading, error}] = useMutation(DESTINATION_CREATE);
@@ -63,7 +70,7 @@ const ManageUserDestinations = () => {
     return (
         <div>
             <h3>User Destinations</h3>
-            <Button startIcon={<AddIcon/>} sx={{marginBottom: 2}} onClick={toggleDialog}>Destination</Button>
+            <StyledAddButton startIcon={<AddIcon/>} sx={{marginBottom: 2}} onClick={toggleDialog}>Destination</StyledAddButton>
             <FormDialog title='Add New Destination' open={openDialog}>
                 <AddDestinationForm toggleDialog={toggleDialog} createNewDestination={createNewDestination}/>
             </FormDialog>
@@ -83,4 +90,4 @@ const ManageUserDestinations = () => {
     );
 };
 
-export default ManageUserDestinations;
+export default DestinationsList;
