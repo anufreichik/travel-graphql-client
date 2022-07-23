@@ -4,7 +4,7 @@ import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {accommodationSchema} from "../../util/yupValidatorSchemas";
 import {Box, Button, Grid, MenuItem, TextField} from "@mui/material";
 
-const AccommodationForm = ({createNewAccommodation, toggleDialog}) => {
+const AccommodationForm = ({submitForm, onCancel}) => {
 
     const {
         register,
@@ -20,12 +20,10 @@ const AccommodationForm = ({createNewAccommodation, toggleDialog}) => {
         reValidateMode: 'onBlur',
         resolver: yupResolver(accommodationSchema),
     });
-    const onSubmit = async (formValues,e) => {
-        console.log(formValues)
-       await createNewAccommodation(formValues);
-
+    const onSubmit =  (formValues,e) => {
+        submitForm(formValues);
         e.target.reset();
-        toggleDialog('Accommodation');
+        onCancel();
 
     }
     return (
@@ -60,9 +58,8 @@ const AccommodationForm = ({createNewAccommodation, toggleDialog}) => {
                                 error={!!errors.status}
                                 helperText={errors.status?.message}
                                 fullWidth={true}
-                                sx={{marginBottom:0, marginTop:0}}
+                                sx={{marginBottom:0, marginTop:0,width:'400px'}}
                                 size="small"
-                                sx={{width:'400px'}}
                             >
                                 <MenuItem value={'hotel'}>Hotel</MenuItem>*/}
                                 <MenuItem value={'airbnb'}>AirBnb</MenuItem>
@@ -109,7 +106,7 @@ const AccommodationForm = ({createNewAccommodation, toggleDialog}) => {
                     <Button sx={{mt:0}} type="submit">
                         Add
                     </Button>
-                    <Button sx={{mt:0}} onClick={()=>toggleDialog('Accommodation')}>
+                    <Button sx={{mt:0}} onClick={onCancel}>
                         Cancel
                     </Button>
                 </Grid>

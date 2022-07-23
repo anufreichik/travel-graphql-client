@@ -1,34 +1,44 @@
 import React, {useState} from 'react';
-import {Collapse, Divider, List, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
+import {Collapse, Divider, IconButton, List, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
+import ConfirmDialog from "../common/ConfirmDialog";
+import FormDialog from "../common/FormDialog";
+import FoodExperienceForm from "./FoodExperienceForm";
 
-const FoodPlaceListItem = ({foodPlace}) => {
-    const [open, setOpen] = useState(false);
+const FoodPlaceListItem = ({foodPlace, deleteFoodPlace, updateFoodPlace}) => {
+    const [openDetails, setOpenDetails] = useState(false);
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+    const [openEditFoodPlaceForm, setOpenEditFoodPlaceForm] = useState(false);
 
     const handleClick = () => {
-        setOpen(!open);
+        setOpenDetails(!openDetails);
     };
+    const handleDelete = () => {
+      deleteFoodPlace(foodPlace._id);
+      setOpenConfirmDialog(false);
+    }
+
 
     return (
         <>
-            <ListItemButton onClick={handleClick}>
-                <ListItemIcon>
-                    {open ? <ExpandLess/> : <ExpandMore/>}
+            <ListItemButton >
+                <ListItemIcon onClick={handleClick}>
+                    {openDetails ? <ExpandLess/> : <ExpandMore/>}
                 </ListItemIcon>
                 <ListItemText primary={foodPlace.foodPlaceName} secondary={foodPlace.foodType}/>
-                <ListItemIcon>
+                <IconButton color="info" aria-label="edit food expirience"  onClick={()=>setOpenEditFoodPlaceForm(true)}>
                     <EditIcon color='info'/>
-                </ListItemIcon>
-                <ListItemIcon>
+                </IconButton>
+                <IconButton color="info" aria-label="delete food expirience" onClick={()=>setOpenConfirmDialog(true)}>
                     <DeleteIcon color='info'/>
-                </ListItemIcon>
+                </IconButton>
 
             </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={openDetails} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{pl: 4}}>
                         <div>
@@ -41,6 +51,19 @@ const FoodPlaceListItem = ({foodPlace}) => {
                 </List>
             </Collapse>
             <Divider/>
+           <ConfirmDialog title={'Delete Confirmation'}
+                          onCancelConfirmDialog={()=>setOpenConfirmDialog(false)}
+                          onSubmitConfirmDialog={handleDelete}
+                          openConfirmDialog={openConfirmDialog}
+                          content={'Do you want to delete this food place?'}
+
+           />
+
+            <FormDialog title='Edit Food Place' open={openEditFoodPlaceForm} onClose={()=>setOpenEditFoodPlaceForm(false)}>
+                <FoodExperienceForm submitForm={updateFoodPlace} foodPlace={foodPlace}
+                                     onCancel={()=>setOpenEditFoodPlaceForm(false)} />
+            </FormDialog>
+
         </>
     );
 };

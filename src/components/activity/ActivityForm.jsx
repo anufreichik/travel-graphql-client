@@ -4,7 +4,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {activitySchema} from "../../util/yupValidatorSchemas";
 import { Controller, useForm } from 'react-hook-form';
 
-const AddActivityForm = ({createNewActivity, toggleDialog}) => {
+const ActivityForm = ({submitForm, onCancel}) => {
     const {
         register,
         handleSubmit,
@@ -20,9 +20,9 @@ const AddActivityForm = ({createNewActivity, toggleDialog}) => {
         resolver: yupResolver(activitySchema),
     });
     const onSubmit = (formValues,e) => {
-        createNewActivity(formValues);
+        submitForm(formValues);
         e.target.reset();
-        toggleDialog('Activity');
+        onCancel();
 
     }
 
@@ -59,9 +59,8 @@ const AddActivityForm = ({createNewActivity, toggleDialog}) => {
                                     error={!!errors.status}
                                     helperText={errors.status?.message}
                                     fullWidth={true}
-                                    sx={{marginBottom:0, marginTop:0}}
+                                    sx={{marginBottom:0, marginTop:0,width:'400px'}}
                                     size="small"
-                                    sx={{width:'400px'}}
                                 >
                                     <MenuItem value={'general'}>General Activity</MenuItem>*/}
                                     <MenuItem value={'sport'}>Sport Activity</MenuItem>
@@ -108,7 +107,7 @@ const AddActivityForm = ({createNewActivity, toggleDialog}) => {
                     <Button sx={{mt:0}} type="submit">
                         Add
                     </Button>
-                    <Button sx={{mt:0}} onClick={()=>toggleDialog('Activity')}>
+                    <Button sx={{mt:0}} onClick={onCancel}>
                         Cancel
                     </Button>
                 </Grid>
@@ -117,4 +116,4 @@ const AddActivityForm = ({createNewActivity, toggleDialog}) => {
     );
 };
 
-export default AddActivityForm;
+export default ActivityForm;

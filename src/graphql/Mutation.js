@@ -104,4 +104,20 @@ export const FOOD_PLACE_DELETE = gql`
     }
 `;
 
+export const FOOD_PLACE_UPDATE = gql`
+    mutation foodPlaceUpdate($foodPlaceId:ID!, $foodPlace: FoodPlaceInput) {
+        foodPlaceUpdate (
+           values:$foodPlace, foodPlaceId: $foodPlaceId
+        ){
+            _id
+            foodPlaceName
+            foodType
+            address
+            notes
+            link
+        }
+    }
+`;
+
+
 

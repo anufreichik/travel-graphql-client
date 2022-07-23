@@ -3,8 +3,19 @@ import {Controller, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {foodExperienceSchema} from "../../util/yupValidatorSchemas";
 import {Box, Button, Grid, MenuItem, TextField} from "@mui/material";
+import { get } from 'lodash';
 
-const FoodExperienceForm = ({createNewFoodPlace, toggleDialog}) => {
+const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
+
+
+    const foodPlaceName = get(foodPlace, 'foodPlaceName', '');
+    const foodType = get(foodPlace, 'foodType', 'dinner');
+    const address = get(foodPlace, 'address', '');
+    const notes = get(foodPlace, 'notes', '');
+    const link = get(foodPlace, 'link', '');
+    const id = get(foodPlace, '_id', '');
+
+
     const {
         register,
         handleSubmit,
@@ -13,18 +24,25 @@ const FoodExperienceForm = ({createNewFoodPlace, toggleDialog}) => {
         reset,
     } = useForm({
         defaultValues:{
-            foodPlaceType: "dinner",
+            foodPlaceName:foodPlaceName,
+            foodPlaceType: foodType,
+            foodPlaceAddress:address,
+            foodPlaceNotes:notes,
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',
         resolver: yupResolver(foodExperienceSchema),
     });
-    const onSubmit = (formValues,e) => {
-        createNewFoodPlace(formValues);
-        e.target.reset();
-        toggleDialog('Food');
 
+    const onSubmit = (formValues,e) => {
+        if(!id)
+            submitForm(formValues);
+        else
+            submitForm(formValues, id)
+        e.target.reset();
+        onCancel();
     }
+
     return (
         <Box>
             {/*<h3>Add Trip Food Place</h3>*/}
@@ -58,9 +76,8 @@ const FoodExperienceForm = ({createNewFoodPlace, toggleDialog}) => {
                                 error={!!errors.status}
                                 helperText={errors.status?.message}
                                 fullWidth={true}
-                                sx={{marginBottom:0, marginTop:0}}
+                                sx={{marginBottom:0, marginTop:0,width:'400px'}}
                                 size="small"
-                                sx={{width:'400px'}}
                             >
                                 <MenuItem value={'dinner'}>Dinner</MenuItem>*/}
                                 <MenuItem value={'lunch'}>Lunch</MenuItem>
@@ -106,9 +123,9 @@ const FoodExperienceForm = ({createNewFoodPlace, toggleDialog}) => {
                 </Grid>
                 <Grid item xs={12} sx={{pb: 2}}>
                     <Button sx={{mt:0}} type="submit">
-                        Add
+                        Submit
                     </Button>
-                    <Button sx={{mt:0}} onClick={()=>toggleDialog('Food')}>
+                    <Button sx={{mt:0}} onClick={onCancel}>
                         Cancel
                     </Button>
                 </Grid>

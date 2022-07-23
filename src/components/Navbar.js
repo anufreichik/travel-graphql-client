@@ -3,7 +3,7 @@ import {AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography} from "@mui
 import {Link} from "react-router-dom";
 import {AuthContext} from "../context/authContext";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
+import logo from '../static/Images/logo.png';
 function Navbar() {
     const { user, logout } = useContext(AuthContext);
     const routerLinkStyle = {textDecoration:"none", color:"grey", fontSize:"14px"};
@@ -22,7 +22,13 @@ function Navbar() {
            <AppBar position='static'>
                <Toolbar>
                    <Typography variant="h5" component="div">
-                        <Link to="/" style={{textDecoration:"none", color:"grey"}}>Home</Link>
+                        <Link to="/" style={{textDecoration:"none", color:"grey", display:'inline-block', marginTop:'10px'}}>
+                            <img
+                            src={`${logo}`}
+                            srcSet={`${logo}`}
+                            alt={'logo'}
+                            loading="lazy"
+                        /></Link>
                    </Typography>
                    {
                        user ? (

@@ -49,7 +49,6 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
     const navigate = useNavigate();
     const open = Boolean(anchorEl);
 
-
     const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
 
     const handleClickOpenDeleteDialog = () => {
@@ -171,16 +170,16 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">Food Experiences</Typography>
                     {
-                        destination?.destinationFood?.map(item =>
-                            (<Typography variant="body2" color="text.secondary" key={item._id}>
+                        destination?.destinationFood?.map((item,i) =>
+                            (<Typography variant="body2" color="text.secondary" key={`f${i}`}>
                                 {`${item.foodPlaceName} -(${item.foodType})`}
                             </Typography>)
                         )
                     }
                     <Typography gutterBottom variant="h5" component="div">Activities</Typography>
                     {
-                        destination?.destinationActivity?.map(item =>
-                            (<Typography variant="body2" color="text.secondary" key={item._id}>
+                        destination?.destinationActivity?.map((item,i) =>
+                            (<Typography variant="body2" color="text.secondary" key={`act${i}`}>
                                 {`${item.activityName} -(${item.activityType})`}
                             </Typography>)
                         )

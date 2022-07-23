@@ -19,9 +19,15 @@ import AccommodationListItem from "../acommodation/AccommodationListItem";
 import HotelIcon from '@mui/icons-material/Hotel';
 import AddIcon from '@mui/icons-material/Add';
 import FormDialog from "../common/FormDialog";
-import AddActivityForm from "../activity/AddActivityForm";
+import ActivityForm from "../activity/ActivityForm";
 import FoodExperienceForm from "../food/FoodExperienceForm";
-import {ACTIVITY_CREATE, FOOD_PLACE_CREATE, ACCOMMODATION_CREATE} from "../../graphql/Mutation";
+import {
+    ACTIVITY_CREATE,
+    FOOD_PLACE_CREATE,
+    ACCOMMODATION_CREATE,
+    FOOD_PLACE_DELETE,
+    FOOD_PLACE_UPDATE
+} from "../../graphql/Mutation";
 import AccommodationForm from "../acommodation/AccommodationForm";
 
 const StyledHeader = styled('div')(({theme}) => ({
@@ -43,6 +49,11 @@ const StyledBackButton = styled(Button)(({theme}) => ({
 
 const DestinationInfo = ({destinationId}) => {
 
+    const [openActivity, setOpenActivity] = useState(false);
+    const [openFoodExperience, setOpenFoodExperience] = useState(false);
+    const [openAccommodation, setOpenAccommodation] = useState(false);
+
+    //QUEIRES
     const {
         data,
         refetch,
@@ -55,34 +66,43 @@ const DestinationInfo = ({destinationId}) => {
         },
     });
 
+    //MUTATIONS
     const [activityCreate, {loading: activityLoading, error: activityError}] = useMutation(ACTIVITY_CREATE);
     const [foodPlaceCreate, {loading: foodPlaceLoading, error: foodPlaceError}] = useMutation(FOOD_PLACE_CREATE);
     const [accommodationCreate, {loading: accommodationLoading, error: accommodationError}] = useMutation(ACCOMMODATION_CREATE);
+    const [foodPlaceDelete] = useMutation(FOOD_PLACE_DELETE);
+    const [foodPlaceUpdate] = useMutation(FOOD_PLACE_UPDATE);
 
-    const [openActivity, setOpenActivity] = useState(false);
-    const [openFoodExperience, setOpenFoodExperience] = useState(false);
-    const [openAccommodation, setOpenAccommodation] = useState(false);
+    const deleteFoodPlace = (id) => {
+        foodPlaceDelete({
+            variables: {
+                foodPlaceId: id
+            },
+        })
+            .then((res) => {
+                refetch();
+            });
+    }
 
-
-
-    const toggleDialog = (val) => {
-        switch (val) {
-            case 'Activity':
-                setOpenActivity((prev) => !prev);
-                break;
-            case 'Food':
-                setOpenFoodExperience((prev) => !prev);
-                break;
-            case 'Accommodation':
-                setOpenAccommodation((prev) => !prev);
-                break;
-            default:
-        }
-
-    };
+    const updateFoodPlace=(formValues, id)=>{
+        foodPlaceUpdate({
+            variables:{
+                foodPlace: {
+                    foodPlaceName: formValues.foodPlaceName,
+                    foodType: formValues.foodPlaceType,
+                    address: formValues.foodPlaceAddress,
+                    notes: formValues.foodPlaceNotes,
+                    destination: destinationId
+                },
+                foodPlaceId:id
+            }
+        })
+            .then((res) => {
+                refetch();
+            });
+    }
 
     const createNewAccommodation=(formValues)=>{
-        console.log(formValues)
         accommodationCreate({
             variables:
                 {
@@ -177,7 +197,7 @@ const DestinationInfo = ({destinationId}) => {
                                             component='div'>
                                             Activities
                                         </Typography>
-                                        <IconButton color="info" aria-label="add activity" component="span" onClick={() => toggleDialog('Activity')}>
+                                        <IconButton color="info" aria-label="add activity" component="span" onClick={() => setOpenActivity(true)}>
                                             <AddIcon fontSize="large"/>
                                         </IconButton>
                                     </StyledHeader>
@@ -207,7 +227,7 @@ const DestinationInfo = ({destinationId}) => {
                                     <StyledHeader>
                                         <LocalDiningIcon fontSize='large' color="success"/><Typography
                                         sx={{paddingLeft: 1}} variant={'h5'} component={'div'}>Food Places</Typography>
-                                        <IconButton color="info" aria-label="add food" component="span" onClick={() => toggleDialog('Food')}>
+                                        <IconButton color="info" aria-label="add food" component="span" onClick={() =>setOpenFoodExperience(true)}>
                                             <AddIcon fontSize="large"/>
                                         </IconButton>
 
@@ -217,7 +237,12 @@ const DestinationInfo = ({destinationId}) => {
                         >
                             {
                                 data?.destination.destinationFood.length > 0 &&
-                                data?.destination.destinationFood.map(el => <FoodPlaceListItem key={el._id} foodPlace={el}/>)
+                                data?.destination.destinationFood.map(el => <FoodPlaceListItem key={el._id}
+                                                                                               foodPlace={el}
+                                                                                               deleteFoodPlace={deleteFoodPlace}
+                                                                                               updateFoodPlace={updateFoodPlace}
+
+                                />)
                             }
                             {
                                 data?.destination.destinationFood.length === 0 &&
@@ -237,7 +262,7 @@ const DestinationInfo = ({destinationId}) => {
                                         <HotelIcon fontSize='large' color="success"/><Typography
                                         sx={{paddingLeft: 1}} variant={'h5'}
                                         component={'div'}>Accommodations</Typography>
-                                        <IconButton color="info" aria-label="add activity" component="span" onClick={() => toggleDialog('Accommodation')}>
+                                        <IconButton color="info" aria-label="add activity" component="span" onClick={() => setOpenAccommodation(true)}>
                                             <AddIcon fontSize="large"/>
                                         </IconButton>
                                     </StyledHeader>
@@ -262,16 +287,17 @@ const DestinationInfo = ({destinationId}) => {
 
         </Card>
             <FormDialog title='Add Activity' open={openActivity} onClose={()=>setOpenActivity(false)}>
-                <AddActivityForm createNewActivity={createNewActivity}
-                                 toggleDialog={toggleDialog}
+                <ActivityForm submitForm={createNewActivity}
+                             onCancel={()=>setOpenActivity(false)}
                 />
             </FormDialog>
             <FormDialog title='Add Food Place' open={openFoodExperience} onClose={()=>setOpenFoodExperience(false)}>
-                <FoodExperienceForm createNewFoodPlace={createNewFoodPlace}
-                                    toggleDialog={toggleDialog}/>
+                <FoodExperienceForm submitForm={createNewFoodPlace}
+                                    onCancel={()=>setOpenFoodExperience(false)}/>
             </FormDialog>
             <FormDialog title='Add Accommodation' open={openAccommodation} onClose={()=>setOpenAccommodation(false)}>
-               <AccommodationForm createNewAccommodation={createNewAccommodation} toggleDialog={toggleDialog}/>
+               <AccommodationForm submitForm={createNewAccommodation}
+                                onCancel={()=>setOpenAccommodation(false)}/>
             </FormDialog>
         </>
     );

@@ -3,7 +3,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState} from "react";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -11,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 export default function FormDialog({title, open, onClose, children}) {
 
     return (
-        <div>
+
             <Dialog open={open}
             >
                 <DialogTitle>
@@ -37,7 +36,7 @@ export default function FormDialog({title, open, onClose, children}) {
                     {children}
                 </DialogContent>
             </Dialog>
-        </div>
+
     );
 }
 
