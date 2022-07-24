@@ -3,8 +3,17 @@ import {Controller, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {accommodationSchema} from "../../util/yupValidatorSchemas";
 import {Box, Button, Grid, MenuItem, TextField} from "@mui/material";
+import {get} from "lodash";
 
-const AccommodationForm = ({submitForm, onCancel}) => {
+const AccommodationForm = ({accommodation, submitForm, onCancel}) => {
+
+    const accommodationName = get(accommodation, 'accommodationName', '');
+    const accommodationType = get(accommodation, 'accommodationType', 'hotel');
+    const address = get(accommodation, 'address', '');
+    const notes = get(accommodation, 'notes', '');
+    const link = get(accommodation, 'link', '');
+    const id = get(accommodation, '_id', '');
+
 
     const {
         register,
@@ -14,14 +23,20 @@ const AccommodationForm = ({submitForm, onCancel}) => {
         reset,
     } = useForm({
         defaultValues:{
-            accommodationType: "hotel",
+            accommodationName:accommodationName,
+            accommodationType: accommodationType,
+            accommodationAddress:address,
+            accommodationNotes:notes,
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',
         resolver: yupResolver(accommodationSchema),
     });
     const onSubmit =  (formValues,e) => {
-        submitForm(formValues);
+        if(!id)
+            submitForm(formValues);
+        else
+            submitForm(formValues, id);
         e.target.reset();
         onCancel();
 
@@ -102,11 +117,17 @@ const AccommodationForm = ({submitForm, onCancel}) => {
                         sx={{width: '500px'}}
                     />
                 </Grid>
-                <Grid item xs={12} sx={{pb: 2}}>
-                    <Button sx={{mt:0}} type="submit">
-                        Add
+                <Grid item xs={12}  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap:1,
+                    paddingBottom: 1,
+                    paddingTop:1
+                }}>
+                    <Button sx={{mt:0}} type="submit" variant="contained" color='primary'>
+                        Submit
                     </Button>
-                    <Button sx={{mt:0}} onClick={onCancel}>
+                    <Button sx={{mt:0}} onClick={onCancel} variant="contained" color='secondary'>
                         Cancel
                     </Button>
                 </Grid>

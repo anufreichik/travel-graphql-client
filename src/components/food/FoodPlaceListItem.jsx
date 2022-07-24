@@ -30,10 +30,10 @@ const FoodPlaceListItem = ({foodPlace, deleteFoodPlace, updateFoodPlace}) => {
                     {openDetails ? <ExpandLess/> : <ExpandMore/>}
                 </ListItemIcon>
                 <ListItemText primary={foodPlace.foodPlaceName} secondary={foodPlace.foodType}/>
-                <IconButton color="info" aria-label="edit food expirience"  onClick={()=>setOpenEditFoodPlaceForm(true)}>
+                <IconButton color="info" aria-label="edit food place"  onClick={()=>setOpenEditFoodPlaceForm(true)}>
                     <EditIcon color='info'/>
                 </IconButton>
-                <IconButton color="info" aria-label="delete food expirience" onClick={()=>setOpenConfirmDialog(true)}>
+                <IconButton color="info" aria-label="delete food place" onClick={()=>setOpenConfirmDialog(true)}>
                     <DeleteIcon color='info'/>
                 </IconButton>
 

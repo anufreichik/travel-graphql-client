@@ -104,6 +104,14 @@ export const FOOD_PLACE_DELETE = gql`
     }
 `;
 
+export const ACCOMMODATION_DELETE = gql`
+    mutation accommodationDelete($accommodationId:ID!) {
+        accommodationDelete (
+            accommodationId: $accommodationId
+        )
+    }
+`;
+
 export const FOOD_PLACE_UPDATE = gql`
     mutation foodPlaceUpdate($foodPlaceId:ID!, $foodPlace: FoodPlaceInput) {
         foodPlaceUpdate (
@@ -119,5 +127,19 @@ export const FOOD_PLACE_UPDATE = gql`
     }
 `;
 
+export const ACCOMMODATION_UPDATE = gql`
+    mutation accommodationUpdate($accommodationId:ID!, $accommodation: AccommodationInput) {
+        accommodationUpdate (
+            values:$accommodation, accommodationId: $accommodationId
+        ){
+            _id
+            accommodationName
+            accommodationType
+            address
+            notes
+            link
+        }
+    }
+`;
 
 

@@ -26,7 +26,7 @@ import {
     FOOD_PLACE_CREATE,
     ACCOMMODATION_CREATE,
     FOOD_PLACE_DELETE,
-    FOOD_PLACE_UPDATE
+    FOOD_PLACE_UPDATE, ACCOMMODATION_DELETE, ACCOMMODATION_UPDATE
 } from "../../graphql/Mutation";
 import AccommodationForm from "../acommodation/AccommodationForm";
 
@@ -42,9 +42,9 @@ const StyledHeader = styled('div')(({theme}) => ({
 }));
 
 const StyledBackButton = styled(Button)(({theme}) => ({
-   fontSize:'1.2rem',
+    fontSize: '1.2rem',
     color: theme.palette.info.main,
-    textTransform:'uppercase',
+    textTransform: 'uppercase',
 }));
 
 const DestinationInfo = ({destinationId}) => {
@@ -69,10 +69,14 @@ const DestinationInfo = ({destinationId}) => {
     //MUTATIONS
     const [activityCreate, {loading: activityLoading, error: activityError}] = useMutation(ACTIVITY_CREATE);
     const [foodPlaceCreate, {loading: foodPlaceLoading, error: foodPlaceError}] = useMutation(FOOD_PLACE_CREATE);
-    const [accommodationCreate, {loading: accommodationLoading, error: accommodationError}] = useMutation(ACCOMMODATION_CREATE);
+    const [accommodationCreate, {
+        loading: accommodationLoading,
+        error: accommodationError
+    }] = useMutation(ACCOMMODATION_CREATE);
     const [foodPlaceDelete] = useMutation(FOOD_PLACE_DELETE);
     const [foodPlaceUpdate] = useMutation(FOOD_PLACE_UPDATE);
-
+    const [accommodationDelete] = useMutation(ACCOMMODATION_DELETE);
+    const [accommodationUpdate] = useMutation(ACCOMMODATION_UPDATE);
     const deleteFoodPlace = (id) => {
         foodPlaceDelete({
             variables: {
@@ -84,9 +88,21 @@ const DestinationInfo = ({destinationId}) => {
             });
     }
 
-    const updateFoodPlace=(formValues, id)=>{
+    const deleteAccommodation = (id) => {
+        accommodationDelete({
+            variables: {
+                accommodationId: id
+            },
+        })
+            .then((res) => {
+                refetch();
+            });
+    }
+
+
+    const updateFoodPlace = (formValues, id) => {
         foodPlaceUpdate({
-            variables:{
+            variables: {
                 foodPlace: {
                     foodPlaceName: formValues.foodPlaceName,
                     foodType: formValues.foodPlaceType,
@@ -94,7 +110,7 @@ const DestinationInfo = ({destinationId}) => {
                     notes: formValues.foodPlaceNotes,
                     destination: destinationId
                 },
-                foodPlaceId:id
+                foodPlaceId: id
             }
         })
             .then((res) => {
@@ -102,7 +118,25 @@ const DestinationInfo = ({destinationId}) => {
             });
     }
 
-    const createNewAccommodation=(formValues)=>{
+    const updateAccommodation = (formValues, id) => {
+        accommodationUpdate({
+            variables: {
+                accommodation: {
+                    accommodationName: formValues.accommodationName,
+                    accommodationType: formValues.accommodationType,
+                    address: formValues.accommodationAddress,
+                    notes: formValues.accommodationNotes,
+                    destination: destinationId
+                },
+                accommodationId: id
+            }
+        })
+            .then((res) => {
+                refetch();
+            });
+    }
+
+    const createNewAccommodation = (formValues) => {
         accommodationCreate({
             variables:
                 {
@@ -171,133 +205,144 @@ const DestinationInfo = ({destinationId}) => {
     if (loading) return <div>Loading...</div>
 
     return (<>
-        <Card sx={{minWidth: 500}}>
-            <CardActions>
-                <StyledBackButton startIcon={<ArrowBackIcon/>} onClick={handleNavigateToMyDestinations}>My Destinations</StyledBackButton>
-            </CardActions>
-            <CardContent>
-                <Typography variant="h5" component="div" color="text.secondary" gutterBottom>
-                    {data?.destination.destinationName}
-                </Typography>
-                <Typography sx={{fontSize: 14}}>
-                    {data?.destination.destinationDescription?.slice(0, 200)}{data?.destination.destinationDescription?.length > 200 ? '...' : ''}
-                </Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
-                        <List
-                            sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral'}}
-                            component="nav"
-                            aria-labelledby="activity-list-subheader"
-                            subheader={
-                                <ListSubheader component="div" id="activity-list-subheader">
-                                    <StyledHeader>
-                                        <LocalActivityIcon fontSize='large' color="success"/>
-                                        <Typography
+            <Card sx={{minWidth: 500}}>
+                <CardActions>
+                    <StyledBackButton startIcon={<ArrowBackIcon/>} onClick={handleNavigateToMyDestinations}>My
+                        Destinations</StyledBackButton>
+                </CardActions>
+                <CardContent>
+                    <Typography variant="h5" component="div" color="text.secondary" gutterBottom>
+                        {data?.destination.destinationName}
+                    </Typography>
+                    <Typography sx={{fontSize: 14}}>
+                        {data?.destination.destinationDescription?.slice(0, 200)}{data?.destination.destinationDescription?.length > 200 ? '...' : ''}
+                    </Typography>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={4}>
+                            <List
+                                sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral'}}
+                                component="nav"
+                                aria-labelledby="activity-list-subheader"
+                                subheader={
+                                    <ListSubheader component="div" id="activity-list-subheader">
+                                        <StyledHeader>
+                                            <LocalActivityIcon fontSize='large' color="success"/>
+                                            <Typography
+                                                sx={{paddingLeft: 1}} variant={'h5'}
+                                                component='div'>
+                                                Activities
+                                            </Typography>
+                                            <IconButton color="info" aria-label="add activity" component="span"
+                                                        onClick={() => setOpenActivity(true)}>
+                                                <AddIcon fontSize="large"/>
+                                            </IconButton>
+                                        </StyledHeader>
+                                    </ListSubheader>
+                                }
+                            >
+                                {
+                                    data?.destination.destinationActivity.length > 0 &&
+                                    data?.destination.destinationActivity.map(el => <ActivityListItem key={el._id}
+                                                                                                      activity={el}/>)
+                                }
+                                {
+                                    data?.destination.destinationActivity.length === 0 &&
+                                    <Typography sx={{textAlign: 'center', paddingTop: 1}}>No Activities
+                                        Found</Typography>
+                                }
+
+                            </List>
+                        </Grid>
+
+                        <Grid item xs={12} md={4}>
+                            <List
+                                sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral'}}
+                                component="nav"
+                                aria-labelledby="food-list-subheader"
+                                subheader={
+                                    <ListSubheader component="div" id="food-list-subheader">
+                                        <StyledHeader>
+                                            <LocalDiningIcon fontSize='large' color="success"/><Typography
+                                            sx={{paddingLeft: 1}} variant={'h5'} component={'div'}>Food
+                                            Places</Typography>
+                                            <IconButton color="info" aria-label="add food" component="span"
+                                                        onClick={() => setOpenFoodExperience(true)}>
+                                                <AddIcon fontSize="large"/>
+                                            </IconButton>
+
+                                        </StyledHeader>
+                                    </ListSubheader>
+                                }
+                            >
+                                {
+                                    data?.destination.destinationFood.length > 0 &&
+                                    data?.destination.destinationFood.map(el => <FoodPlaceListItem key={el._id}
+                                                                                                   foodPlace={el}
+                                                                                                   deleteFoodPlace={deleteFoodPlace}
+                                                                                                   updateFoodPlace={updateFoodPlace}
+
+                                    />)
+                                }
+                                {
+                                    data?.destination.destinationFood.length === 0 &&
+                                    <Typography sx={{textAlign: 'center', paddingTop: 1}}>No Food Places
+                                        Found</Typography>
+                                }
+
+                            </List>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <List
+                                sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral'}}
+                                component="nav"
+                                aria-labelledby="food-list-subheader"
+                                subheader={
+                                    <ListSubheader component="div" id="food-list-subheader">
+                                        <StyledHeader>
+                                            <HotelIcon fontSize='large' color="success"/><Typography
                                             sx={{paddingLeft: 1}} variant={'h5'}
-                                            component='div'>
-                                            Activities
-                                        </Typography>
-                                        <IconButton color="info" aria-label="add activity" component="span" onClick={() => setOpenActivity(true)}>
-                                            <AddIcon fontSize="large"/>
-                                        </IconButton>
-                                    </StyledHeader>
-                                </ListSubheader>
-                            }
-                        >
-                            {
-                                data?.destination.destinationActivity.length > 0 &&
-                                data?.destination.destinationActivity.map(el => <ActivityListItem key={el._id}
-                                                                                                  activity={el}/>)
-                            }
-                            {
-                                data?.destination.destinationActivity.length === 0 &&
-                                <Typography sx={{textAlign: 'center', paddingTop: 1}}>No Activities Found</Typography>
-                            }
+                                            component={'div'}>Accommodations</Typography>
+                                            <IconButton color="info" aria-label="add activity" component="span"
+                                                        onClick={() => setOpenAccommodation(true)}>
+                                                <AddIcon fontSize="large"/>
+                                            </IconButton>
+                                        </StyledHeader>
+                                    </ListSubheader>
+                                }
+                            >
+                                {
+                                    data?.destination.destinationAccommodation.length > 0 &&
+                                    data?.destination.destinationAccommodation.map(el => <AccommodationListItem
+                                        key={el._id}
+                                        accommodation={el}
+                                        deleteAccommodation={deleteAccommodation}
+                                        updateAccommodation={updateAccommodation}
+                                    />)
+                                }
+                                {
+                                    data?.destination.destinationAccommodation.length === 0 &&
+                                    <Typography sx={{textAlign: 'center', paddingTop: 1}}>No Accommodations
+                                        Found</Typography>
+                                }
 
-                        </List>
+                            </List>
+                        </Grid>
                     </Grid>
+                </CardContent>
 
-                    <Grid item xs={12} md={4}>
-                        <List
-                            sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral'}}
-                            component="nav"
-                            aria-labelledby="food-list-subheader"
-                            subheader={
-                                <ListSubheader component="div" id="food-list-subheader">
-                                    <StyledHeader>
-                                        <LocalDiningIcon fontSize='large' color="success"/><Typography
-                                        sx={{paddingLeft: 1}} variant={'h5'} component={'div'}>Food Places</Typography>
-                                        <IconButton color="info" aria-label="add food" component="span" onClick={() =>setOpenFoodExperience(true)}>
-                                            <AddIcon fontSize="large"/>
-                                        </IconButton>
-
-                                    </StyledHeader>
-                                </ListSubheader>
-                            }
-                        >
-                            {
-                                data?.destination.destinationFood.length > 0 &&
-                                data?.destination.destinationFood.map(el => <FoodPlaceListItem key={el._id}
-                                                                                               foodPlace={el}
-                                                                                               deleteFoodPlace={deleteFoodPlace}
-                                                                                               updateFoodPlace={updateFoodPlace}
-
-                                />)
-                            }
-                            {
-                                data?.destination.destinationFood.length === 0 &&
-                                <Typography sx={{textAlign: 'center', paddingTop: 1}}>No Food Places Found</Typography>
-                            }
-
-                        </List>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <List
-                            sx={{width: '100%', maxWidth: 360, bgcolor: 'background.neutral', minHeight: '100%'}}
-                            component="nav"
-                            aria-labelledby="food-list-subheader"
-                            subheader={
-                                <ListSubheader component="div" id="food-list-subheader">
-                                    <StyledHeader>
-                                        <HotelIcon fontSize='large' color="success"/><Typography
-                                        sx={{paddingLeft: 1}} variant={'h5'}
-                                        component={'div'}>Accommodations</Typography>
-                                        <IconButton color="info" aria-label="add activity" component="span" onClick={() => setOpenAccommodation(true)}>
-                                            <AddIcon fontSize="large"/>
-                                        </IconButton>
-                                    </StyledHeader>
-                                </ListSubheader>
-                            }
-                        >
-                            {
-                                data?.destination.destinationAccommodation.length > 0 &&
-                                data?.destination.destinationAccommodation.map(el => <AccommodationListItem key={el._id}
-                                                                                                            accommodation={el}/>)
-                            }
-                            {
-                                data?.destination.destinationAccommodation.length === 0 &&
-                                <Typography sx={{textAlign: 'center', paddingTop: 1}}>No Accommodations
-                                    Found</Typography>
-                            }
-
-                        </List>
-                    </Grid>
-                </Grid>
-            </CardContent>
-
-        </Card>
-            <FormDialog title='Add Activity' open={openActivity} onClose={()=>setOpenActivity(false)}>
+            </Card>
+            <FormDialog title='Add Activity' open={openActivity} onClose={() => setOpenActivity(false)}>
                 <ActivityForm submitForm={createNewActivity}
-                             onCancel={()=>setOpenActivity(false)}
+                              onCancel={() => setOpenActivity(false)}
                 />
             </FormDialog>
-            <FormDialog title='Add Food Place' open={openFoodExperience} onClose={()=>setOpenFoodExperience(false)}>
+            <FormDialog title='Add Food Place' open={openFoodExperience} onClose={() => setOpenFoodExperience(false)}>
                 <FoodExperienceForm submitForm={createNewFoodPlace}
-                                    onCancel={()=>setOpenFoodExperience(false)}/>
+                                    onCancel={() => setOpenFoodExperience(false)}/>
             </FormDialog>
-            <FormDialog title='Add Accommodation' open={openAccommodation} onClose={()=>setOpenAccommodation(false)}>
-               <AccommodationForm submitForm={createNewAccommodation}
-                                onCancel={()=>setOpenAccommodation(false)}/>
+            <FormDialog title='Add Accommodation' open={openAccommodation} onClose={() => setOpenAccommodation(false)}>
+                <AccommodationForm submitForm={createNewAccommodation}
+                                   onCancel={() => setOpenAccommodation(false)}/>
             </FormDialog>
         </>
     );
