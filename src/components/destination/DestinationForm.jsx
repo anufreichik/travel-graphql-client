@@ -4,7 +4,7 @@ import {useForm, Controller} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {destinationSchema} from "../../util/yupValidatorSchemas";
 
-const AddDestinationForm = ({createNewDestination, toggleDialog}) => {
+const DestinationForm = ({onSubmitForm, onClose}) => {
     const {
         register,
         handleSubmit,
@@ -17,13 +17,13 @@ const AddDestinationForm = ({createNewDestination, toggleDialog}) => {
     });
 
     const onSubmit = (formValues, e) => {
-        createNewDestination(formValues);
+        onSubmitForm(formValues);
         e.target.reset();
-        toggleDialog();
+        onClose();
     }
 
     const handleCancel = () => {
-        toggleDialog();
+        onClose();
     }
 
     return (
@@ -60,12 +60,17 @@ const AddDestinationForm = ({createNewDestination, toggleDialog}) => {
                         sx={{width:'500px'}}
                     />
                 </Grid>
-                <Grid item xs={12} sx={{pb: 2}}>
-                    <Button sx={{mt: 0}} type="submit" variant="contained">
-                        Add
+                <Grid item xs={12}  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    paddingBottom: 2,
+                    paddingTop:2
+                }}>
+                    <Button sx={{mt: 0}} type="submit" variant="contained" color='primary'>
+                        Submit
                     </Button>
 
-                    <Button sx={{mt: 0, ml: 1}} onClick={handleCancel} variant="outlined">
+                    <Button sx={{mt: 0, ml: 1}} onClick={handleCancel} variant="contained" color='secondary'>
                         Cancel
                     </Button>
                 </Grid>
@@ -74,4 +79,4 @@ const AddDestinationForm = ({createNewDestination, toggleDialog}) => {
     );
 };
 
-export default AddDestinationForm;
+export default DestinationForm;

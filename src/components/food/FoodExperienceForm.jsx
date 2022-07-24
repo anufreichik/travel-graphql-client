@@ -121,11 +121,16 @@ const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
                         sx={{width: '500px'}}
                     />
                 </Grid>
-                <Grid item xs={12} sx={{pb: 2}}>
-                    <Button sx={{mt:0}} type="submit">
+                <Grid item xs={12}  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    paddingBottom: 2,
+                    paddingTop:2
+                }}>
+                    <Button sx={{mt:0, marginRight:1}} type="submit" variant="contained">
                         Submit
                     </Button>
-                    <Button sx={{mt:0}} onClick={onCancel}>
+                    <Button sx={{mt:0}} onClick={onCancel} variant="contained" color='secondary'>
                         Cancel
                     </Button>
                 </Grid>

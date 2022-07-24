@@ -7,7 +7,7 @@ import DestinationCard from "./DestinationCard";
 import AddIcon from '@mui/icons-material/Add';
 import {useNavigate} from "react-router-dom";
 import FormDialog from "../common/FormDialog";
-import AddDestinationForm from "./AddDestinationForm";
+import DestinationForm from "./DestinationForm";
 import {DESTINATION_CREATE, DESTINATION_DELETE} from "../../graphql/Mutation";
 
 
@@ -44,10 +44,9 @@ const DestinationsList = () => {
         });
     }
 
-    const toggleDialog = () => {
-        setOpenDialog((prev) => !prev);
-
-    };
+    // const toggleDialog = () => {
+    //     setOpenDialog((prev) => !prev);
+    // };
 
     const createNewDestination = (formValues) => {
         destinationCreate({
@@ -70,9 +69,9 @@ const DestinationsList = () => {
     return (
         <div>
             <h3>User Destinations</h3>
-            <StyledAddButton startIcon={<AddIcon/>} sx={{marginBottom: 2}} onClick={toggleDialog}>Destination</StyledAddButton>
-            <FormDialog title='Add New Destination' open={openDialog}>
-                <AddDestinationForm toggleDialog={toggleDialog} createNewDestination={createNewDestination}/>
+            <StyledAddButton startIcon={<AddIcon/>} sx={{marginBottom: 2}} onClick={()=>setOpenDialog(true)}>Destination</StyledAddButton>
+            <FormDialog title='Add New Destination' open={openDialog} onClose={()=>setOpenDialog(false)}>
+                <DestinationForm onClose={()=>setOpenDialog(false)} onSubmitForm={createNewDestination}/>
             </FormDialog>
             {data ? (
                 <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
