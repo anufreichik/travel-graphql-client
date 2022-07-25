@@ -7,16 +7,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
 import ConfirmDialog from "../common/ConfirmDialog";
 import FormDialog from "../common/FormDialog";
-import FoodExperienceForm from "../food/FoodExperienceForm";
 import AccommodationForm from "./AccommodationForm";
 
-const AccommodationListItem = ({accommodation, deleteAccommodation, updateAccommodation}) => {
-    const [openDetails, setOpenDetails] = useState(false);
+const AccommodationListItem = ({accommodation, deleteAccommodation, updateAccommodation, accommodationCollapseClick, collapseState}) => {
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const [openEditAccommodationForm, setOpenEditAccommodationForm] = useState(false);
 
     const handleClick = () => {
-        setOpenDetails(!openDetails);
+        accommodationCollapseClick(accommodation._id);
     };
     const handleDelete = () => {
         deleteAccommodation(accommodation._id);
@@ -26,7 +24,7 @@ const AccommodationListItem = ({accommodation, deleteAccommodation, updateAccomm
         <>
             <ListItemButton>
                 <ListItemIcon onClick={handleClick}>
-                    {openDetails ? <ExpandLess/> : <ExpandMore/>}
+                    {collapseState ? <ExpandLess/> : <ExpandMore/>}
                 </ListItemIcon>
                 <ListItemText primary={accommodation.accommodationName} secondary={accommodation.accommodationType}/>
                 <ListItemIcon  aria-label="edit accommodation"  onClick={()=>setOpenEditAccommodationForm(true)}>
@@ -37,7 +35,7 @@ const AccommodationListItem = ({accommodation, deleteAccommodation, updateAccomm
                 </ListItemIcon>
 
             </ListItemButton>
-            <Collapse in={openDetails} timeout="auto" unmountOnExit>
+            <Collapse in={collapseState} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{pl: 4}}>
                         <div>

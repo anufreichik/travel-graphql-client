@@ -52,6 +52,46 @@ const DestinationInfo = ({destinationId}) => {
     const [openActivity, setOpenActivity] = useState(false);
     const [openFoodExperience, setOpenFoodExperience] = useState(false);
     const [openAccommodation, setOpenAccommodation] = useState(false);
+    const [activityCollapse, setActivityCollapse] = useState([]);
+    const [foodPlaceCollapse, setFoodPlaceCollapse] = useState([]);
+    const [accommodationCollapse, setAccommodationCollapse] = useState([]);
+
+    const activityCollapseClick=(ind)=>{
+        if(activityCollapse.includes(ind)){
+            const collapseCopy = activityCollapse.filter(el=>el!==ind);
+            setActivityCollapse(collapseCopy);
+        }
+        else{
+            //since we want collapse all other items in activity when expending one,
+            // i'm setting collapseCopy to empty array, but in case we want to keep expended, just set it to [...activityCollapse]
+            const collapseCopy=[]; //[...activityCollapse];
+            collapseCopy.push(ind);
+            setActivityCollapse(collapseCopy);
+        }
+    }
+    const foodPlaceCollapseClick=(ind)=>{
+        if(foodPlaceCollapse.includes(ind)){
+            const collapseCopy = foodPlaceCollapse.filter(el=>el!==ind);
+            setFoodPlaceCollapse(collapseCopy);
+        }
+        else{
+            const collapseCopy=[];
+            collapseCopy.push(ind);
+            setFoodPlaceCollapse(collapseCopy);
+        }
+    }
+
+    const accommodationCollapseClick=(ind)=>{
+        if(accommodationCollapse.includes(ind)){
+            const collapseCopy = accommodationCollapse.filter(el=>el!==ind);
+            setAccommodationCollapse(collapseCopy);
+        }
+        else{
+            const collapseCopy=[];
+            collapseCopy.push(ind);
+            setAccommodationCollapse(collapseCopy);
+        }
+    }
 
     //QUEIRES
     const {
@@ -211,7 +251,6 @@ const DestinationInfo = ({destinationId}) => {
             });
     }
     const createNewFoodPlace = (formValues) => {
-        console.log(formValues)
         foodPlaceCreate({
             variables:
                 {
@@ -281,6 +320,9 @@ const DestinationInfo = ({destinationId}) => {
                                                                                                       activity={el}
                                                                                                       deleteActivity={deleteActivity}
                                                                                                       updateActivity={updateActivity}
+                                                                                                      activityCollapseClick={activityCollapseClick}
+                                                                                                      collapseState={activityCollapse.includes(el._id)}
+
                                     />)
                                 }
                                 {
@@ -318,7 +360,8 @@ const DestinationInfo = ({destinationId}) => {
                                                                                                    foodPlace={el}
                                                                                                    deleteFoodPlace={deleteFoodPlace}
                                                                                                    updateFoodPlace={updateFoodPlace}
-
+                                                                                                   foodPlaceCollapseClick={foodPlaceCollapseClick}
+                                                                                                   collapseState={foodPlaceCollapse.includes(el._id)}
                                     />)
                                 }
                                 {
@@ -355,6 +398,8 @@ const DestinationInfo = ({destinationId}) => {
                                         accommodation={el}
                                         deleteAccommodation={deleteAccommodation}
                                         updateAccommodation={updateAccommodation}
+                                        accommodationCollapseClick={accommodationCollapseClick}
+                                        collapseState={accommodationCollapse.includes(el._id)}
                                     />)
                                 }
                                 {

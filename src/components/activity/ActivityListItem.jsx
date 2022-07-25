@@ -9,14 +9,14 @@ import ConfirmDialog from "../common/ConfirmDialog";
 import FormDialog from "../common/FormDialog";
 import ActivityForm from "./ActivityForm";
 
-const ActivityListItem = ({activity, deleteActivity, updateActivity}) => {
-    const [openDetails, setOpenDetails] = useState(false);
+const ActivityListItem = ({activity, deleteActivity, updateActivity, activityCollapseClick, collapseState}) => {
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const [openEditActivity, setOpenEditActivity] = useState(false);
 
 
     const handleClick = () => {
-        setOpenDetails(!openDetails);
+        //setOpenDetails(!openDetails);
+        activityCollapseClick(activity._id);
     };
     const handleDelete = () => {
         deleteActivity(activity._id);
@@ -26,18 +26,18 @@ const ActivityListItem = ({activity, deleteActivity, updateActivity}) => {
         <>
             <ListItemButton>
                 <ListItemIcon onClick={handleClick}>
-                    {openDetails ? <ExpandLess/> : <ExpandMore/>}
+                    {collapseState ? <ExpandLess/> : <ExpandMore/>}
                 </ListItemIcon>
                 <ListItemText primary={activity.activityName} secondary={activity.activityType}/>
-                <ListItemIcon onClick={()=>setOpenEditActivity(true)}>
+                <ListItemIcon onClick={() => setOpenEditActivity(true)}>
                     <EditIcon color='info'/>
                 </ListItemIcon>
-                <ListItemIcon  onClick={()=>setOpenConfirmDialog(true)}>
+                <ListItemIcon onClick={() => setOpenConfirmDialog(true)}>
                     <DeleteIcon color='info'/>
                 </ListItemIcon>
 
             </ListItemButton>
-            <Collapse in={openDetails} timeout="auto" unmountOnExit>
+            <Collapse in={collapseState} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{pl: 4}}>
                         <div>
