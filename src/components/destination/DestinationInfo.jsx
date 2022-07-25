@@ -26,7 +26,7 @@ import {
     FOOD_PLACE_CREATE,
     ACCOMMODATION_CREATE,
     FOOD_PLACE_DELETE,
-    FOOD_PLACE_UPDATE, ACCOMMODATION_DELETE, ACCOMMODATION_UPDATE
+    FOOD_PLACE_UPDATE, ACCOMMODATION_DELETE, ACCOMMODATION_UPDATE, ACTIVITY_UPDATE, ACTIVITY_DELETE
 } from "../../graphql/Mutation";
 import AccommodationForm from "../acommodation/AccommodationForm";
 
@@ -73,10 +73,27 @@ const DestinationInfo = ({destinationId}) => {
         loading: accommodationLoading,
         error: accommodationError
     }] = useMutation(ACCOMMODATION_CREATE);
+
     const [foodPlaceDelete] = useMutation(FOOD_PLACE_DELETE);
     const [foodPlaceUpdate] = useMutation(FOOD_PLACE_UPDATE);
+
     const [accommodationDelete] = useMutation(ACCOMMODATION_DELETE);
     const [accommodationUpdate] = useMutation(ACCOMMODATION_UPDATE);
+
+    const [activityDelete] = useMutation(ACTIVITY_DELETE);
+    const [activityUpdate] = useMutation(ACTIVITY_UPDATE);
+
+    const deleteActivity = (id) => {
+        activityDelete({
+            variables: {
+                activityId: id
+            },
+        })
+            .then((res) => {
+                refetch();
+            });
+    }
+
     const deleteFoodPlace = (id) => {
         foodPlaceDelete({
             variables: {
@@ -99,6 +116,24 @@ const DestinationInfo = ({destinationId}) => {
             });
     }
 
+
+    const updateActivity = (formValues, id) => {
+        activityUpdate({
+            variables: {
+                activity: {
+                    activityName: formValues.activityName,
+                    activityType: formValues.activityType,
+                    address: formValues.activityAddress,
+                    notes: formValues.activityNotes,
+                    destination: destinationId
+                },
+                activityId: id
+            }
+        })
+            .then((res) => {
+                refetch();
+            });
+    }
 
     const updateFoodPlace = (formValues, id) => {
         foodPlaceUpdate({
@@ -211,7 +246,7 @@ const DestinationInfo = ({destinationId}) => {
                         Destinations</StyledBackButton>
                 </CardActions>
                 <CardContent>
-                    <Typography variant="h5" component="div" color="text.secondary" gutterBottom>
+                    <Typography variant="h3" component="div" color="text.secondary" gutterBottom>
                         {data?.destination.destinationName}
                     </Typography>
                     <Typography sx={{fontSize: 14}}>
@@ -243,7 +278,10 @@ const DestinationInfo = ({destinationId}) => {
                                 {
                                     data?.destination.destinationActivity.length > 0 &&
                                     data?.destination.destinationActivity.map(el => <ActivityListItem key={el._id}
-                                                                                                      activity={el}/>)
+                                                                                                      activity={el}
+                                                                                                      deleteActivity={deleteActivity}
+                                                                                                      updateActivity={updateActivity}
+                                    />)
                                 }
                                 {
                                     data?.destination.destinationActivity.length === 0 &&

@@ -5,30 +5,39 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
+import ConfirmDialog from "../common/ConfirmDialog";
+import FormDialog from "../common/FormDialog";
+import ActivityForm from "./ActivityForm";
 
-const ActivityListItem = ({activity}) => {
-    const [open, setOpen] = useState(false);
+const ActivityListItem = ({activity, deleteActivity, updateActivity}) => {
+    const [openDetails, setOpenDetails] = useState(false);
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+    const [openEditActivity, setOpenEditActivity] = useState(false);
+
 
     const handleClick = () => {
-        setOpen(!open);
+        setOpenDetails(!openDetails);
     };
-
+    const handleDelete = () => {
+        deleteActivity(activity._id);
+        setOpenConfirmDialog(false);
+    }
     return (
         <>
-            <ListItemButton onClick={handleClick} >
-                <ListItemIcon>
-                    {open ? <ExpandLess/> : <ExpandMore/>}
+            <ListItemButton>
+                <ListItemIcon onClick={handleClick}>
+                    {openDetails ? <ExpandLess/> : <ExpandMore/>}
                 </ListItemIcon>
                 <ListItemText primary={activity.activityName} secondary={activity.activityType}/>
-                <ListItemIcon>
+                <ListItemIcon onClick={()=>setOpenEditActivity(true)}>
                     <EditIcon color='info'/>
                 </ListItemIcon>
-                <ListItemIcon>
+                <ListItemIcon  onClick={()=>setOpenConfirmDialog(true)}>
                     <DeleteIcon color='info'/>
                 </ListItemIcon>
 
             </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={openDetails} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{pl: 4}}>
                         <div>
@@ -40,6 +49,19 @@ const ActivityListItem = ({activity}) => {
                 </List>
             </Collapse>
             <Divider/>
+
+            <ConfirmDialog title={'Delete Confirmation'}
+                           onCancelConfirmDialog={() => setOpenConfirmDialog(false)}
+                           onSubmitConfirmDialog={handleDelete}
+                           openConfirmDialog={openConfirmDialog}
+                           content={'Do you want to delete this activity?'}
+
+            />
+
+            <FormDialog title='Edit Activity' open={openEditActivity} onClose={() => setOpenEditActivity(false)}>
+                <ActivityForm submitForm={updateActivity} activity={activity}
+                              onCancel={() => setOpenEditActivity(false)}/>
+            </FormDialog>
         </>
     );
 };

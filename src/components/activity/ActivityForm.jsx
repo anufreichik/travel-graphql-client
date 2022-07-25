@@ -2,25 +2,40 @@ import React from 'react';
 import {Box, Button, Grid, MenuItem, Select, Stack, TextField} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {activitySchema} from "../../util/yupValidatorSchemas";
-import { Controller, useForm } from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
+import {get} from "lodash";
 
-const ActivityForm = ({submitForm, onCancel}) => {
+const ActivityForm = ({activity, submitForm, onCancel}) => {
+
+    const activityName = get(activity, 'activityName', '');
+    const activityType = get(activity, 'activityType', 'general');
+    const address = get(activity, 'address', '');
+    const notes = get(activity, 'notes', '');
+    const link = get(activity, 'link', '');
+    const id = get(activity, '_id', '');
+
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: {errors},
         control,
         reset,
     } = useForm({
-        defaultValues:{
-            activityType: "general",
+        defaultValues: {
+            activityName: activityName,
+            activityType: activityType,
+            activityAddress: address,
+            activityNotes: notes,
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',
         resolver: yupResolver(activitySchema),
     });
-    const onSubmit = (formValues,e) => {
-        submitForm(formValues);
+    const onSubmit = (formValues, e) => {
+        if (!id)
+            submitForm(formValues);
+        else
+            submitForm(formValues, id);
         e.target.reset();
         onCancel();
 
@@ -30,7 +45,7 @@ const ActivityForm = ({submitForm, onCancel}) => {
         <Box>
             {/*<h3>Add Trip Activity</h3>*/}
             <Grid container spacing={2} component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-                <Grid item xs={12} >
+                <Grid item xs={12}>
                     <TextField
                         id="activityName"
                         name="activityName"
@@ -43,35 +58,35 @@ const ActivityForm = ({submitForm, onCancel}) => {
                         sx={{width: '400px'}}
                     />
                 </Grid>
-                <Grid item xs={12} >
-                        <Controller
-                            control={control}
-                            name='activityType'
-                            render={({ field: { onChange, value, name } }) => (
-                                <TextField
-                                    id='activityType'
-                                    select
-                                    value={value}
-                                    name={name}
-                                    onChange={onChange}
-                                    label='Activity Type'
-                                    margin={'normal'}
-                                    error={!!errors.status}
-                                    helperText={errors.status?.message}
-                                    fullWidth={true}
-                                    sx={{marginBottom:0, marginTop:0,width:'400px'}}
-                                    size="small"
-                                >
-                                    <MenuItem value={'general'}>General Activity</MenuItem>*/}
-                                    <MenuItem value={'sport'}>Sport Activity</MenuItem>
-                                    <MenuItem value={'hiking'}>Hiking</MenuItem>
-                                    <MenuItem value={'art'}>Entertainment & Art</MenuItem>
-                                </TextField>
-                            )}
-                        />
+                <Grid item xs={12}>
+                    <Controller
+                        control={control}
+                        name='activityType'
+                        render={({field: {onChange, value, name}}) => (
+                            <TextField
+                                id='activityType'
+                                select
+                                value={value}
+                                name={name}
+                                onChange={onChange}
+                                label='Activity Type'
+                                margin={'normal'}
+                                error={!!errors.status}
+                                helperText={errors.status?.message}
+                                fullWidth={true}
+                                sx={{marginBottom: 0, marginTop: 0, width: '400px'}}
+                                size="small"
+                            >
+                                <MenuItem value={'general'}>General Activity</MenuItem>*/}
+                                <MenuItem value={'sport'}>Sport Activity</MenuItem>
+                                <MenuItem value={'hiking'}>Hiking</MenuItem>
+                                <MenuItem value={'art'}>Entertainment & Art</MenuItem>
+                            </TextField>
+                        )}
+                    />
 
                 </Grid>
-                <Grid item xs={12} >
+                <Grid item xs={12}>
                     <TextField
                         id="activityAddress"
                         name="activityAddress"
@@ -87,7 +102,7 @@ const ActivityForm = ({submitForm, onCancel}) => {
                         sx={{width: '500px'}}
                     />
                 </Grid>
-                <Grid item xs={12} >
+                <Grid item xs={12}>
                     <TextField
                         id="activityNotes"
                         name="activityNotes"
@@ -103,11 +118,17 @@ const ActivityForm = ({submitForm, onCancel}) => {
                         sx={{width: '500px'}}
                     />
                 </Grid>
-                <Grid item xs={12} sx={{pb: 2}}>
-                    <Button sx={{mt:0}} type="submit">
-                        Add
+                <Grid item xs={12} sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    paddingBottom: 1,
+                    paddingTop: 1,
+                    gap: 1
+                }}>
+                    <Button sx={{mt: 0}} type="submit" variant="contained">
+                        Submit
                     </Button>
-                    <Button sx={{mt:0}} onClick={onCancel}>
+                    <Button sx={{mt: 0}} onClick={onCancel} variant="contained" color='secondary'>
                         Cancel
                     </Button>
                 </Grid>
