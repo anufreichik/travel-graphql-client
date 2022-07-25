@@ -165,6 +165,7 @@ const DestinationInfo = ({destinationId}) => {
                     activityType: formValues.activityType,
                     address: formValues.activityAddress,
                     notes: formValues.activityNotes,
+                    link:formValues.activityLink,
                     destination: destinationId
                 },
                 activityId: id
@@ -183,6 +184,7 @@ const DestinationInfo = ({destinationId}) => {
                     foodType: formValues.foodPlaceType,
                     address: formValues.foodPlaceAddress,
                     notes: formValues.foodPlaceNotes,
+                    link:formValues.foodPlaceLink,
                     destination: destinationId
                 },
                 foodPlaceId: id
@@ -201,6 +203,7 @@ const DestinationInfo = ({destinationId}) => {
                     accommodationType: formValues.accommodationType,
                     address: formValues.accommodationAddress,
                     notes: formValues.accommodationNotes,
+                    link:formValues.accommodationLink,
                     destination: destinationId
                 },
                 accommodationId: id
@@ -220,7 +223,8 @@ const DestinationInfo = ({destinationId}) => {
                         accommodationType: formValues.accommodationType,
                         address: formValues.accommodationAddress,
                         notes: formValues.accommodationNotes,
-                        destination: destinationId
+                        link:formValues.accommodationLink,
+                        destination: destinationId,
                     }
 
                 },
@@ -240,6 +244,7 @@ const DestinationInfo = ({destinationId}) => {
                         activityType: formValues.activityType,
                         address: formValues.activityAddress,
                         notes: formValues.activityNotes,
+                        link:formValues.activityLink,
                         destination: destinationId
                     }
 
@@ -259,6 +264,7 @@ const DestinationInfo = ({destinationId}) => {
                         foodType: formValues.foodPlaceType,
                         address: formValues.foodPlaceAddress,
                         notes: formValues.foodPlaceNotes,
+                        link:formValues.foodPlaceLink,
                         destination: destinationId
                     }
 

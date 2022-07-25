@@ -11,7 +11,7 @@ const ActivityForm = ({activity, submitForm, onCancel}) => {
     const activityType = get(activity, 'activityType', 'general');
     const address = get(activity, 'address', '');
     const notes = get(activity, 'notes', '');
-    const link = get(activity, 'link', '');
+    const url = get(activity, 'link', '');
     const id = get(activity, '_id', '');
 
     const {
@@ -26,6 +26,7 @@ const ActivityForm = ({activity, submitForm, onCancel}) => {
             activityType: activityType,
             activityAddress: address,
             activityNotes: notes,
+            activityLink:url
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',
@@ -52,8 +53,8 @@ const ActivityForm = ({activity, submitForm, onCancel}) => {
                         label="Activity Name"
                         margin='dense'
                         {...register('activityName')}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
+                        error={Boolean(errors.activityName)}
+                        helperText={errors.activityName?.message}
                         size="small"
                         sx={{width: '400px'}}
                     />
@@ -71,8 +72,8 @@ const ActivityForm = ({activity, submitForm, onCancel}) => {
                                 onChange={onChange}
                                 label='Activity Type'
                                 margin={'normal'}
-                                error={!!errors.status}
-                                helperText={errors.status?.message}
+                                error={!!errors.activityType}
+                                helperText={errors.activityType?.message}
                                 fullWidth={true}
                                 sx={{marginBottom: 0, marginTop: 0, width: '400px'}}
                                 size="small"
@@ -96,8 +97,8 @@ const ActivityForm = ({activity, submitForm, onCancel}) => {
                         minRows={2}
                         multiline
                         {...register('activityAddress')}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
+                        error={Boolean(errors.activityAddress)}
+                        helperText={errors.activityAddress?.message}
                         size="small"
                         sx={{width: '500px'}}
                     />
@@ -112,10 +113,21 @@ const ActivityForm = ({activity, submitForm, onCancel}) => {
                         maxRows={4}
                         minRows={2}
                         {...register('activityNotes')}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
+                        error={Boolean(errors.activityNotes)}
+                        helperText={errors.activityNotes?.message}
                         size="small"
                         sx={{width: '500px'}}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id="activityLink"
+                        label="Activity Link"
+                        margin={'normal'}
+                        {...register('activityLink')}
+                        error={!!errors.activityLink}
+                        helperText={errors.activityLink?.message}
+                        fullWidth={true}
                     />
                 </Grid>
                 <Grid item xs={12} sx={{

@@ -12,7 +12,7 @@ const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
     const foodType = get(foodPlace, 'foodType', 'dinner');
     const address = get(foodPlace, 'address', '');
     const notes = get(foodPlace, 'notes', '');
-    const link = get(foodPlace, 'link', '');
+    const url = get(foodPlace, 'link', '');
     const id = get(foodPlace, '_id', '');
 
 
@@ -28,6 +28,7 @@ const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
             foodPlaceType: foodType,
             foodPlaceAddress:address,
             foodPlaceNotes:notes,
+            foodPlaceLink:url
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',
@@ -54,8 +55,8 @@ const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
                         label="Food Place Name"
                         margin='dense'
                         {...register('foodPlaceName')}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
+                        error={Boolean(errors.foodPlaceName)}
+                        helperText={errors.foodPlaceName?.message}
                         size="small"
                         sx={{width: '400px'}}
                     />
@@ -73,8 +74,8 @@ const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
                                 onChange={onChange}
                                 label='Food Place Type'
                                 margin={'normal'}
-                                error={!!errors.status}
-                                helperText={errors.status?.message}
+                                error={!!errors.foodPlaceType}
+                                helperText={errors.foodPlaceType?.message}
                                 fullWidth={true}
                                 sx={{marginBottom:0, marginTop:0,width:'400px'}}
                                 size="small"
@@ -99,8 +100,8 @@ const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
                         minRows={2}
                         multiline
                         {...register('foodPlaceAddress')}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
+                        error={Boolean(errors.foodPlaceAddress)}
+                        helperText={errors.foodPlaceAddress?.message}
                         size="small"
                         sx={{width: '500px'}}
                     />
@@ -115,12 +116,25 @@ const FoodExperienceForm = ({foodPlace, submitForm, onCancel}) => {
                         maxRows={4}
                         minRows={2}
                         {...register('foodPlaceNotes')}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
+                        error={Boolean(errors.foodPlaceNotes)}
+                        helperText={errors.foodPlaceNotes?.message}
                         size="small"
                         sx={{width: '500px'}}
                     />
                 </Grid>
+
+                <Grid item xs={12}>
+                    <TextField
+                        id="foodPlaceLink"
+                        label="Food Place Link"
+                        margin={'normal'}
+                        {...register('foodPlaceLink')}
+                        error={!!errors.foodPlaceLink}
+                        helperText={errors.foodPlaceLink?.message}
+                        fullWidth={true}
+                    />
+                </Grid>
+
                 <Grid item xs={12}  sx={{
                     display: "flex",
                     justifyContent: "flex-end",
