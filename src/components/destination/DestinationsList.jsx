@@ -19,13 +19,15 @@ const StyledAddButton = styled(Button)(({theme}) => ({
 
 const DestinationsList = () => {
     const {user} = useContext(AuthContext);
+
     const navigate = useNavigate();
     const [destinationCreate, {loading: destinationLoading, error}] = useMutation(DESTINATION_CREATE);
     const [destinationDelete] = useMutation(DESTINATION_DELETE);
     const [openDialog, setOpenDialog] = useState(false);
     const {
         data,
-        loading
+        loading,
+        refetch
     } = useQuery(GET_DESTINATIONSBYUSER, {
         fetchPolicy: 'cache-first',
         nextFetchPolicy: 'network-only',
@@ -77,8 +79,10 @@ const DestinationsList = () => {
                 <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
                     {data?.userdestinations?.map((dest, ind) => (
                         <Grid item xs={2} sm={4} md={4} key={ind}>
-                            <DestinationCard destination={dest} showControls={true}
-                                             handleDeleteDestination={handleDeleteDestination}/>
+                            <DestinationCard destination={dest} showControls={user._id===dest.owner}
+                                             handleDeleteDestination={handleDeleteDestination}
+                                             refetch={refetch}
+                            />
                         </Grid>
                     ))}
                 </Grid>

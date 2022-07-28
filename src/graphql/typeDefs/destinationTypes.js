@@ -15,6 +15,7 @@ export const destinationTypes = gql`
         destinationActivity:[Activity]
         destinationAccommodation:[Accommodation]
         images:[String]
+        starredBy:[String]
         owner:ID
     }
     type PagedDestination{
@@ -29,6 +30,7 @@ export const destinationTypes = gql`
         destinationCreate(values:DestinationInput):Destination
         destinationDelete(destinationId:ID!):String
         destinationUpdate(destinationId:ID!, values:DestinationInput ):Destination
+        destinationUpdateStarred(destinationId:ID!, userId:ID!):Destination
     }
 
     input DestinationInput {

@@ -9,7 +9,7 @@ import ConfirmDialog from "../common/ConfirmDialog";
 import FormDialog from "../common/FormDialog";
 import FoodExperienceForm from "./FoodExperienceForm";
 
-const FoodPlaceListItem = ({foodPlace, deleteFoodPlace, updateFoodPlace, foodPlaceCollapseClick, collapseState}) => {
+const FoodPlaceListItem = ({foodPlace, deleteFoodPlace, updateFoodPlace, foodPlaceCollapseClick, collapseState, canDeleteEdit}) => {
 
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const [openEditFoodPlaceForm, setOpenEditFoodPlaceForm] = useState(false);
@@ -31,12 +31,18 @@ const FoodPlaceListItem = ({foodPlace, deleteFoodPlace, updateFoodPlace, foodPla
                     {collapseState ? <ExpandLess/> : <ExpandMore/>}
                 </ListItemIcon>
                 <ListItemText primary={foodPlace.foodPlaceName} secondary={foodPlace.foodType}/>
-                <IconButton color="info" aria-label="edit food place" onClick={() => setOpenEditFoodPlaceForm(true)}>
-                    <EditIcon color='info'/>
-                </IconButton>
-                <IconButton color="info" aria-label="delete food place" onClick={() => setOpenConfirmDialog(true)}>
-                    <DeleteIcon color='info'/>
-                </IconButton>
+                {
+                    canDeleteEdit &&
+                    <>
+                        <IconButton color="info" aria-label="edit food place" onClick={() => setOpenEditFoodPlaceForm(true)}>
+                            <EditIcon color='info'/>
+                        </IconButton>
+                        <IconButton color="info" aria-label="delete food place" onClick={() => setOpenConfirmDialog(true)}>
+                            <DeleteIcon color='info'/>
+                        </IconButton>
+                    </>
+                }
+
 
             </ListItemButton>
             <Collapse in={collapseState} timeout="auto" unmountOnExit>

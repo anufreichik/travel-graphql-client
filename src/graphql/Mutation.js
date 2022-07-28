@@ -42,6 +42,22 @@ export const DESTINATION_CREATE = gql`
     }
 `;
 
+export const DESTINATION_STAR = gql`
+    mutation destinationUpdateStarred($destinationId: ID!, $userId:ID!) {
+        destinationUpdateStarred (
+            destinationId:$destinationId
+            userId:$userId
+        ){
+            _id
+            destinationName
+            destinationDescription
+            starredBy
+            owner
+        }
+    }
+`;
+
+
 export const ACTIVITY_CREATE = gql`
     mutation activityCreate($activity: ActivityInput) {
         activityCreate (

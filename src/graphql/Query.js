@@ -6,6 +6,8 @@ export const GET_DESTINATIONS = gql`
             list {
                 _id
                 destinationName
+                starredBy
+                owner
                 destinationFood {
                     foodPlaceName
                     foodType
@@ -13,6 +15,10 @@ export const GET_DESTINATIONS = gql`
                 destinationActivity {
                     activityName
                     activityType
+                }
+                destinationAccommodation {
+                    accommodationName
+                    accommodationType
                 }
             }
             totalCount
@@ -25,6 +31,8 @@ export const GET_DESTINATIONSBYUSER = gql`
         userdestinations(owner:$owner){
             _id
             destinationName
+            starredBy
+            owner
             destinationFood {
                 foodPlaceName
                 foodType
@@ -33,7 +41,10 @@ export const GET_DESTINATIONSBYUSER = gql`
                 activityName
                 activityType
             }
-
+            destinationAccommodation {
+                accommodationName
+                accommodationType
+            }
         }
     }
 `;
@@ -43,6 +54,8 @@ export const GET_DESTINATION_BYID = gql`
         destination(destinationId:$destinationId){
             destinationName
             destinationDescription
+            starredBy
+            owner
             destinationFood {
                 _id
                 foodPlaceName

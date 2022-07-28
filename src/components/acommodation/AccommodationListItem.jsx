@@ -9,7 +9,7 @@ import ConfirmDialog from "../common/ConfirmDialog";
 import FormDialog from "../common/FormDialog";
 import AccommodationForm from "./AccommodationForm";
 
-const AccommodationListItem = ({accommodation, deleteAccommodation, updateAccommodation, accommodationCollapseClick, collapseState}) => {
+const AccommodationListItem = ({accommodation, deleteAccommodation, updateAccommodation, accommodationCollapseClick, collapseState, canDeleteEdit}) => {
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const [openEditAccommodationForm, setOpenEditAccommodationForm] = useState(false);
 
@@ -27,12 +27,18 @@ const AccommodationListItem = ({accommodation, deleteAccommodation, updateAccomm
                     {collapseState ? <ExpandLess/> : <ExpandMore/>}
                 </ListItemIcon>
                 <ListItemText primary={accommodation.accommodationName} secondary={accommodation.accommodationType}/>
-                <ListItemIcon  aria-label="edit accommodation"  onClick={()=>setOpenEditAccommodationForm(true)}>
-                    <EditIcon color="info" />
-                </ListItemIcon>
-                <ListItemIcon  aria-label="delete accommodation" onClick={()=>setOpenConfirmDialog(true)}>
-                    <DeleteIcon color='info'/>
-                </ListItemIcon>
+                {
+                   canDeleteEdit &&
+                   <>
+                       <ListItemIcon  aria-label="edit accommodation"  onClick={()=>setOpenEditAccommodationForm(true)}>
+                           <EditIcon color="info" />
+                       </ListItemIcon>
+                       <ListItemIcon  aria-label="delete accommodation" onClick={()=>setOpenConfirmDialog(true)}>
+                           <DeleteIcon color='info'/>
+                       </ListItemIcon>
+                   </>
+                }
+
 
             </ListItemButton>
             <Collapse in={collapseState} timeout="auto" unmountOnExit>

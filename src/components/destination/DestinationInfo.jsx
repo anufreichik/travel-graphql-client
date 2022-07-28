@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -29,6 +29,7 @@ import {
     FOOD_PLACE_UPDATE, ACCOMMODATION_DELETE, ACCOMMODATION_UPDATE, ACTIVITY_UPDATE, ACTIVITY_DELETE
 } from "../../graphql/Mutation";
 import AccommodationForm from "../acommodation/AccommodationForm";
+import {AuthContext} from "../../context/authContext";
 
 const StyledHeader = styled('div')(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,7 +48,14 @@ const StyledBackButton = styled(Button)(({theme}) => ({
     textTransform: 'uppercase',
 }));
 
+const StyledListTitle = styled('div')(() => ({
+        display: 'flex'
+    })
+)
+
 const DestinationInfo = ({destinationId}) => {
+
+    const {user} = useContext(AuthContext);
 
     const [openActivity, setOpenActivity] = useState(false);
     const [openFoodExperience, setOpenFoodExperience] = useState(false);
@@ -56,38 +64,35 @@ const DestinationInfo = ({destinationId}) => {
     const [foodPlaceCollapse, setFoodPlaceCollapse] = useState([]);
     const [accommodationCollapse, setAccommodationCollapse] = useState([]);
 
-    const activityCollapseClick=(ind)=>{
-        if(activityCollapse.includes(ind)){
-            const collapseCopy = activityCollapse.filter(el=>el!==ind);
+    const activityCollapseClick = (ind) => {
+        if (activityCollapse.includes(ind)) {
+            const collapseCopy = activityCollapse.filter(el => el !== ind);
             setActivityCollapse(collapseCopy);
-        }
-        else{
+        } else {
             //since we want collapse all other items in activity when expending one,
             // i'm setting collapseCopy to empty array, but in case we want to keep expended, just set it to [...activityCollapse]
-            const collapseCopy=[]; //[...activityCollapse];
+            const collapseCopy = []; //[...activityCollapse];
             collapseCopy.push(ind);
             setActivityCollapse(collapseCopy);
         }
     }
-    const foodPlaceCollapseClick=(ind)=>{
-        if(foodPlaceCollapse.includes(ind)){
-            const collapseCopy = foodPlaceCollapse.filter(el=>el!==ind);
+    const foodPlaceCollapseClick = (ind) => {
+        if (foodPlaceCollapse.includes(ind)) {
+            const collapseCopy = foodPlaceCollapse.filter(el => el !== ind);
             setFoodPlaceCollapse(collapseCopy);
-        }
-        else{
-            const collapseCopy=[];
+        } else {
+            const collapseCopy = [];
             collapseCopy.push(ind);
             setFoodPlaceCollapse(collapseCopy);
         }
     }
 
-    const accommodationCollapseClick=(ind)=>{
-        if(accommodationCollapse.includes(ind)){
-            const collapseCopy = accommodationCollapse.filter(el=>el!==ind);
+    const accommodationCollapseClick = (ind) => {
+        if (accommodationCollapse.includes(ind)) {
+            const collapseCopy = accommodationCollapse.filter(el => el !== ind);
             setAccommodationCollapse(collapseCopy);
-        }
-        else{
-            const collapseCopy=[];
+        } else {
+            const collapseCopy = [];
             collapseCopy.push(ind);
             setAccommodationCollapse(collapseCopy);
         }
@@ -105,6 +110,7 @@ const DestinationInfo = ({destinationId}) => {
             destinationId: destinationId,
         },
     });
+    const canDeleteEdit = data?.destination?.owner === user._id;
 
     //MUTATIONS
     const [activityCreate, {loading: activityLoading, error: activityError}] = useMutation(ACTIVITY_CREATE);
@@ -165,7 +171,7 @@ const DestinationInfo = ({destinationId}) => {
                     activityType: formValues.activityType,
                     address: formValues.activityAddress,
                     notes: formValues.activityNotes,
-                    link:formValues.activityLink,
+                    link: formValues.activityLink,
                     destination: destinationId
                 },
                 activityId: id
@@ -184,7 +190,7 @@ const DestinationInfo = ({destinationId}) => {
                     foodType: formValues.foodPlaceType,
                     address: formValues.foodPlaceAddress,
                     notes: formValues.foodPlaceNotes,
-                    link:formValues.foodPlaceLink,
+                    link: formValues.foodPlaceLink,
                     destination: destinationId
                 },
                 foodPlaceId: id
@@ -203,7 +209,7 @@ const DestinationInfo = ({destinationId}) => {
                     accommodationType: formValues.accommodationType,
                     address: formValues.accommodationAddress,
                     notes: formValues.accommodationNotes,
-                    link:formValues.accommodationLink,
+                    link: formValues.accommodationLink,
                     destination: destinationId
                 },
                 accommodationId: id
@@ -223,7 +229,7 @@ const DestinationInfo = ({destinationId}) => {
                         accommodationType: formValues.accommodationType,
                         address: formValues.accommodationAddress,
                         notes: formValues.accommodationNotes,
-                        link:formValues.accommodationLink,
+                        link: formValues.accommodationLink,
                         destination: destinationId,
                     }
 
@@ -244,7 +250,7 @@ const DestinationInfo = ({destinationId}) => {
                         activityType: formValues.activityType,
                         address: formValues.activityAddress,
                         notes: formValues.activityNotes,
-                        link:formValues.activityLink,
+                        link: formValues.activityLink,
                         destination: destinationId
                     }
 
@@ -264,7 +270,7 @@ const DestinationInfo = ({destinationId}) => {
                         foodType: formValues.foodPlaceType,
                         address: formValues.foodPlaceAddress,
                         notes: formValues.foodPlaceNotes,
-                        link:formValues.foodPlaceLink,
+                        link: formValues.foodPlaceLink,
                         destination: destinationId
                     }
 
@@ -295,7 +301,7 @@ const DestinationInfo = ({destinationId}) => {
                         {data?.destination.destinationName}
                     </Typography>
                     <Typography sx={{fontSize: 14}}>
-                        {data?.destination.destinationDescription?.slice(0, 200)}{data?.destination.destinationDescription?.length > 200 ? '...' : ''}
+                        {data?.destination.destinationDescription}
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={4}>
@@ -306,16 +312,19 @@ const DestinationInfo = ({destinationId}) => {
                                 subheader={
                                     <ListSubheader component="div" id="activity-list-subheader">
                                         <StyledHeader>
-                                            <LocalActivityIcon fontSize='large' color="success"/>
-                                            <Typography
-                                                sx={{paddingLeft: 1}} variant={'h5'}
-                                                component='div'>
-                                                Activities
-                                            </Typography>
-                                            <IconButton color="info" aria-label="add activity" component="span"
-                                                        onClick={() => setOpenActivity(true)}>
-                                                <AddIcon fontSize="large"/>
-                                            </IconButton>
+                                            <StyledListTitle>
+                                                <LocalActivityIcon fontSize='large' color="success"/>
+                                                <Typography
+                                                    sx={{paddingLeft: 1}} variant={'h5'}
+                                                    component='div'>
+                                                    Activities
+                                                </Typography>
+                                            </StyledListTitle>
+                                            {canDeleteEdit &&
+                                                <IconButton color="info" aria-label="add activity" component="span"
+                                                            onClick={() => setOpenActivity(true)}>
+                                                    <AddIcon fontSize="large"/>
+                                                </IconButton>}
                                         </StyledHeader>
                                     </ListSubheader>
                                 }
@@ -328,6 +337,7 @@ const DestinationInfo = ({destinationId}) => {
                                                                                                       updateActivity={updateActivity}
                                                                                                       activityCollapseClick={activityCollapseClick}
                                                                                                       collapseState={activityCollapse.includes(el._id)}
+                                                                                                      canDeleteEdit={canDeleteEdit}
 
                                     />)
                                 }
@@ -348,13 +358,18 @@ const DestinationInfo = ({destinationId}) => {
                                 subheader={
                                     <ListSubheader component="div" id="food-list-subheader">
                                         <StyledHeader>
-                                            <LocalDiningIcon fontSize='large' color="success"/><Typography
-                                            sx={{paddingLeft: 1}} variant={'h5'} component={'div'}>Food
-                                            Places</Typography>
-                                            <IconButton color="info" aria-label="add food" component="span"
-                                                        onClick={() => setOpenFoodExperience(true)}>
-                                                <AddIcon fontSize="large"/>
-                                            </IconButton>
+                                            <StyledListTitle>
+                                                <LocalDiningIcon fontSize='large' color="success"/>
+                                                <Typography
+                                                    sx={{paddingLeft: 1}} variant={'h5'} component={'div'}>Food
+                                                    Places</Typography>
+                                            </StyledListTitle>
+                                            {canDeleteEdit &&
+                                                <IconButton color="info" aria-label="add food" component="span"
+                                                            onClick={() => setOpenFoodExperience(true)}>
+                                                    <AddIcon fontSize="large"/>
+                                                </IconButton>
+                                            }
 
                                         </StyledHeader>
                                     </ListSubheader>
@@ -368,6 +383,7 @@ const DestinationInfo = ({destinationId}) => {
                                                                                                    updateFoodPlace={updateFoodPlace}
                                                                                                    foodPlaceCollapseClick={foodPlaceCollapseClick}
                                                                                                    collapseState={foodPlaceCollapse.includes(el._id)}
+                                                                                                   canDeleteEdit={canDeleteEdit}
                                     />)
                                 }
                                 {
@@ -386,13 +402,16 @@ const DestinationInfo = ({destinationId}) => {
                                 subheader={
                                     <ListSubheader component="div" id="food-list-subheader">
                                         <StyledHeader>
-                                            <HotelIcon fontSize='large' color="success"/><Typography
-                                            sx={{paddingLeft: 1}} variant={'h5'}
-                                            component={'div'}>Accommodations</Typography>
-                                            <IconButton color="info" aria-label="add activity" component="span"
-                                                        onClick={() => setOpenAccommodation(true)}>
-                                                <AddIcon fontSize="large"/>
-                                            </IconButton>
+                                            <StyledListTitle>
+                                                <HotelIcon fontSize='large' color="success"/><Typography
+                                                sx={{paddingLeft: 1}} variant={'h5'}
+                                                component={'div'}>Accommodations</Typography>
+                                            </StyledListTitle>
+                                            {canDeleteEdit &&
+                                                <IconButton color="info" aria-label="add activity" component="span"
+                                                            onClick={() => setOpenAccommodation(true)}>
+                                                    <AddIcon fontSize="large"/>
+                                                </IconButton>}
                                         </StyledHeader>
                                     </ListSubheader>
                                 }
@@ -406,6 +425,7 @@ const DestinationInfo = ({destinationId}) => {
                                         updateAccommodation={updateAccommodation}
                                         accommodationCollapseClick={accommodationCollapseClick}
                                         collapseState={accommodationCollapse.includes(el._id)}
+                                        canDeleteEdit={canDeleteEdit}
                                     />)
                                 }
                                 {

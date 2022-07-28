@@ -20,6 +20,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {Button, Menu, MenuItem} from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import {useMutation} from "@apollo/client";
+import {DESTINATION_CREATE, DESTINATION_STAR} from "../../graphql/Mutation";
+import {GET_DESTINATIONSBYUSER} from "../../graphql/Query";
+import {useContext} from "react";
+import {AuthContext} from "../../context/authContext";
 
 const Img = styled('img')({
     margin: 'auto',
@@ -30,7 +35,7 @@ const Img = styled('img')({
 });
 
 const StyledCardBody = styled('div')({
-    cursor:'pointer'
+    cursor: 'pointer'
 });
 
 const ExpandMore = styled((props) => {
@@ -43,14 +48,28 @@ const ExpandMore = styled((props) => {
         duration: theme.transitions.duration.shortest,
     }),
 }));
-const DestinationCard = ({destination, showControls, handleDeleteDestination}) => {
+const DestinationCard = ({destination, showControls, handleDeleteDestination, refetch}) => {
     const [expanded, setExpanded] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const navigate = useNavigate();
     const open = Boolean(anchorEl);
+    const {user} = useContext(AuthContext);
 
     const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
 
+    const [destinationUpdateStarred, {loading, error}] = useMutation(DESTINATION_STAR);
+
+    const handleFavoriteDestinationIconClick = () => {
+        destinationUpdateStarred({
+            variables: {
+                destinationId: destination._id,
+                userId: user._id
+            }
+        })
+            .then(() => {
+                refetch();
+            });
+    }
     const handleClickOpenDeleteDialog = () => {
         setOpenConfirmDelete(true);
     };
@@ -151,9 +170,13 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
                 </CardContent>
             </StyledCardBody>
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon/>
-                </IconButton>
+                {
+                    user?._id && destination.owner !== user?._id &&
+                    <IconButton aria-label="add to favorites" onClick={handleFavoriteDestinationIconClick}>
+                        <FavoriteIcon color={destination.starredBy.includes(user._id) ? 'error' : ''}/>
+                    </IconButton>
+                }
+
                 <IconButton aria-label="share">
                     <ShareIcon/>
                 </IconButton>
@@ -170,7 +193,7 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">Food Experiences</Typography>
                     {
-                        destination?.destinationFood?.map((item,i) =>
+                        destination?.destinationFood?.map((item, i) =>
                             (<Typography variant="body2" color="text.secondary" key={`f${i}`}>
                                 {`${item.foodPlaceName} -(${item.foodType})`}
                             </Typography>)
@@ -178,7 +201,7 @@ const DestinationCard = ({destination, showControls, handleDeleteDestination}) =
                     }
                     <Typography gutterBottom variant="h5" component="div">Activities</Typography>
                     {
-                        destination?.destinationActivity?.map((item,i) =>
+                        destination?.destinationActivity?.map((item, i) =>
                             (<Typography variant="body2" color="text.secondary" key={`act${i}`}>
                                 {`${item.activityName} -(${item.activityType})`}
                             </Typography>)
